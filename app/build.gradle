@@ -1,0 +1,39 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26  //我们编译app时候用的sdk版本,设置到最高
+    buildToolsVersion '26.0.2' //你构建工具的版本号,设置到最高
+    defaultConfig {
+        applicationId "com.qqcs.smartHouse"
+        minSdkVersion 15
+        targetSdkVersion 24
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    testImplementation 'junit:junit:4.12'
+    //网络
+    implementation files('libs/okhttputils-2_6_2.jar')
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    implementation files('libs/gson-2.2.4.jar')
+    //图片
+    implementation files('libs/universal-image-loader-1.9.5.jar')
+    //下拉刷新
+    implementation project(':ptr-lib')
+    //注解
+    implementation 'com.jakewharton:butterknife:8.8.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.0'
+    //侧滑删除
+    implementation 'com.github.mcxtzhang:SwipeDelMenuLayout:V1.3.0'
+
+
+}

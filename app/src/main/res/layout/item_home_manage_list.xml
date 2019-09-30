@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="96dp">
+        <ImageView
+            android:id="@+id/home_img"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:src="@drawable/ic_home_4"
+            android:scaleType="fitXY"/>
+
+        <TextView
+            android:id="@+id/home_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_toRightOf="@+id/home_img"
+            android:layout_alignTop="@+id/home_img"
+            android:singleLine="true"
+            android:text="华仁凤凰城"
+            android:textColor="@color/text_black"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/home_master_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/home_img"
+            android:layout_alignBottom="@+id/home_img"
+            android:layout_marginLeft="18dp"
+            android:layout_marginBottom="5dp"
+            android:singleLine="true"
+            android:text="户主 : 周杰伦"
+            android:textColor="@color/text_black"
+            android:textSize="14dp" />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="18dp"
+            android:src="@drawable/ic_arrow_right" />
+
+        <include
+            layout="@layout/layout_line_gray"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>
+
+
+
+
+
+

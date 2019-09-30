@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="li love you "
+        android:textColor="#000000"
+        android:textSize="16dp" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_button"
+        android:text="Button"
+        android:textColor="#000000"
+        android:textSize="15dp" />
+
+    <EditText
+        android:id="@+id/name_edt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:hint="输入修改后的价格"
+        android:inputType="numberDecimal"
+
+        android:maxLength="8"
+        android:paddingLeft="@dimen/distance_10dp"
+        android:paddingRight="@dimen/distance_15dp"
+
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textColorHint="@color/white"
+        android:textSize="18dp" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="#00000000"
+        android:listSelector="#00000000"
+        android:fadingEdge="none"
+        android:divider="@null"
+        android:dividerHeight="@dimen/distance_5dp"
+
+        android:fadeScrollbars="true"
+        android:fastScrollEnabled="true"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbarThumbVertical="@color/white"
+        android:scrollbarTrackVertical="@color/white"
+        android:scrollbars="vertical" />
+
+    <CheckBox
+        android:id="@+id/checkbox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@drawable/selector_button"
+        android:checked="true"
+        android:text="条约" />
+
+
+</LinearLayout>
