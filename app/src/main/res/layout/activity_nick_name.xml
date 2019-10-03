@@ -18,24 +18,32 @@
         android:background="@color/white">
 
         <TextView
+            android:id="@+id/name_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="昵称"
+            android:text="当前昵称"
             android:textColor="#333333"
             android:textSize="17dp" />
 
-        <TextView
-            android:id="@+id/nick_name_tv"
+        <EditText
+            android:id="@+id/nick_name_edt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:background="@color/white"
+            android:layout_toRightOf="@+id/name_label"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="45dp"
+            android:layout_marginLeft="20dp"
+            android:paddingRight="45dp"
             android:text=""
             android:textColor="#ff898989"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:hint="请输入昵称"
+            android:gravity="right"
+            android:textColorHint="@color/text_hint"/>
 
         <ImageView
             android:layout_width="24dp"
@@ -50,50 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="20dp" />
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/phone_layout"
-        android:layout_width="match_parent"
-        android:layout_height="57dp"
-        android:background="@color/white">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:text="手机号"
-            android:textColor="#333333"
-            android:textSize="17dp" />
-
-        <TextView
-            android:id="@+id/phone_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="45dp"
-            android:text=""
-            android:textColor="#ff898989"
-            android:textSize="16dp" />
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="13dp"
-            android:src="@drawable/ic_arrow_right" />
-
-        <include
-            layout="@layout/layout_line_gray"
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="20dp" />
+            />
     </RelativeLayout>
 
     <View
@@ -102,17 +67,16 @@
         android:layout_weight="1"/>
 
     <Button
-        android:id="@+id/exit_login_btn"
+        android:id="@+id/save_btn"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginLeft="35dp"
         android:layout_marginBottom="45dp"
         android:layout_marginRight="35dp"
         android:background="@drawable/shape_login_btn"
-        android:text="退出登录"
+        android:text="保存"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="18dp" />
-
 
 </LinearLayout>

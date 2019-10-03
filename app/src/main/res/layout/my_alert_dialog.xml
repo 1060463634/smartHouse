@@ -2,44 +2,63 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="280dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:layout_gravity="center"
-    android:background="@color/white"
-    android:padding="5dp">
+    android:background="@drawable/shape_dialog_select_picture"
+    android:orientation="vertical">
 
     <TextView
-            android:id="@+id/text_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="17dp"
-            android:textColor="#575757"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="25dp"
-            android:layout_marginLeft="5dp"
-            android:text="确认要退出登录吗？"/>
+        android:id="@+id/title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="警告"
+        android:textColor="@color/text_black"
+        android:textSize="18dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="20dp"
+        android:text="是否确认删除此家庭，此操作不可逆"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#575757"
+        android:textSize="15dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_gray"/>
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center">
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center">
+
         <Button
-                android:id="@+id/cancel_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#999999"
-                android:layout_marginRight="5dp"
-                android:text="取消"
-                android:textColor="@color/white"
-                android:textSize="18dp"/>
+            android:id="@+id/cancel_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:text="取消"
+            android:textColor="@color/text_blue"
+            android:textSize="18dp" />
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/line_gray"/>
         <Button
-                android:id="@+id/confirm_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#ff4500"
-                android:text="确定"
-                android:textColor="@color/white"
-                android:textSize="18dp"/>
+            android:id="@+id/confirm_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:text="确定"
+            android:textColor="@color/text_blue"
+            android:textSize="18dp" />
     </LinearLayout>
 </LinearLayout>

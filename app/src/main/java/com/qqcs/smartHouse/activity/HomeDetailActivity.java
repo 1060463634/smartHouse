@@ -1,10 +1,13 @@
 package com.qqcs.smartHouse.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,14 +22,17 @@ import com.qqcs.smartHouse.adapter.FillInfoAdapter;
 import com.qqcs.smartHouse.application.Constants;
 import com.qqcs.smartHouse.application.SP_Constants;
 import com.qqcs.smartHouse.models.FamilyInfoBean;
+import com.qqcs.smartHouse.models.UploadPicBean;
 import com.qqcs.smartHouse.network.CommonJsonList;
 import com.qqcs.smartHouse.network.MyStringCallback;
+import com.qqcs.smartHouse.utils.BitmapUtil;
 import com.qqcs.smartHouse.utils.CommonUtil;
 import com.qqcs.smartHouse.utils.ImageLoaderUtil;
 import com.qqcs.smartHouse.utils.MD5Utils;
 import com.qqcs.smartHouse.utils.PhotoUtils;
 import com.qqcs.smartHouse.utils.SharePreferenceUtil;
 import com.qqcs.smartHouse.utils.ToastUtil;
+import com.qqcs.smartHouse.widgets.MyAlertDialog;
 import com.qqcs.smartHouse.widgets.SelectPictureDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -73,13 +79,16 @@ public class HomeDetailActivity extends BaseActivity implements View.OnClickList
     ImageView mHomeImg;
 
     @BindView(R.id.home_name_tv)
-    TextView mHomeNameTV;
+    EditText mHomeNameTV;
 
     @BindView(R.id.home_address_tv)
-    TextView mHomeAddressTV;
+    EditText mHomeAddressTV;
 
     @BindView(R.id.delete_tv)
     TextView mDeleteTV;
+
+    @BindView(R.id.save_tv)
+    TextView mSaveTV;
 
     private String familyId;
     private String familyName;
@@ -90,7 +99,10 @@ public class HomeDetailActivity extends BaseActivity implements View.OnClickList
     private File mFile;
     private Uri mUri;
     private File mDestFile;
-    private int mCurrentPictureId = R.drawable.ic_home_1;
+
+    //根据状态值，判断图片状态，0：未修改图片；-1：拍照或相册；其它值：来自摄影师
+    private int mCurrentPictureId = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +110,6 @@ public class HomeDetailActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.activity_home_detail);
         ButterKnife.bind(this);
         setTitle(R.string.home_detail_title);
-        setOptionsButtonVisible();
         initView();
 
     }
@@ -119,7 +130,9 @@ public class HomeDetailActivity extends BaseActivity implements View.OnClickList
                 Constants.HTTP_SERVER_DOMAIN + familyImg,mHomeImg);
         mHomeNameTV.setText(familyName);
         mHomeAddressTV.setText(address);
+        mHomeNameTV.setSelection(mHomeNameTV.getText().length());
         mHomeImgLayout.setOnClickListener(this);
+        mSaveTV.setOnClickListener(this);
 
         //初始化用户操作权限
         if(userRole.equalsIgnoreCase(Constants.ROLE_MANAGE)){
@@ -130,11 +143,15 @@ public class HomeDetailActivity extends BaseActivity implements View.OnClickList
             mDeleteHomeLayout.setOnClickListener(this);
             mBindGatewayLayout.setVisibility(View.GONE);
             mHomeMemberLayout.setVisibility(View.GONE);
+            mSaveTV.setVisibility(View.GONE);
+            mHomeNameTV.setEnabled(false);
+            mHomeAddressTV.setEnabled(false);
+            mHomeImgLayout.setClickable(false);
         }else if(userRole.equalsIgnoreCase(Constants.ROLE_LOAD)){
             mDeleteHomeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteFamily();
+                    showConfirmDialog(true);
                 }
             });
 
@@ -217,7 +234,7 @@ public class HomeDetailActivity extends BaseActivity implements View.OnClickList
         OkHttpUtils
                 .postString()
                 .tag(this)
-                .url(Constants.HTTP_DELETE_FAMILY)
+                .url(Constants.HTTP_QUIT_FAMILY)
                 .addHeader("access-token",accessToken)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .content(object.toString())
@@ -240,6 +257,131 @@ public class HomeDetailActivity extends BaseActivity implements View.OnClickList
                 });
     }
 
+    private void saveFamily(String imgId){
+        String accessToken = (String) SharePreferenceUtil.
+                get(this, SP_Constants.ACCESS_TOKEN,"");
+        String timestamp = System.currentTimeMillis() + "";
+        JSONObject object = CommonUtil.getRequstJson(getApplicationContext());
+        JSONObject dataObject = new JSONObject();
+
+        try {
+            String lng = object.getJSONObject("device").getString("lng");
+            String lat = object.getJSONObject("device").getString("lat");
+            String name = mHomeNameTV.getText().toString();
+            String address = mHomeAddressTV.getText().toString();
+
+            dataObject.put("familyId", familyId);
+            dataObject.put("lng", lng);
+            dataObject.put("lat", lat);
+            dataObject.put("address", address);
+            dataObject.put("familyNickname", name);
+            dataObject.put("familyImg", imgId);
+            dataObject.put("timestamp", timestamp);
+
+            object.put("data", dataObject);
+            object.put("sign", MD5Utils.md5s(familyId
+                    + lng + lat + address + name + imgId +timestamp));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkHttpUtils
+                .postString()
+                .tag(this)
+                .url(Constants.HTTP_UPDATE_FAMILY)
+                .addHeader("access-token",accessToken)
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+                .content(object.toString())
+                .build()
+                .execute(new MyStringCallback<Object>(this, Object.class, true, false) {
+
+                    @Override
+                    public void onSuccess(Object data) {
+                        ToastUtil.showToast(HomeDetailActivity.this, "保存成功！");
+                        Intent intent = new Intent();
+                        setResult(RESULT_OK,intent);
+                        finish();
+                    }
+
+
+                    @Override
+                    public void onFailure(String message) {
+                        ToastUtil.showToast(HomeDetailActivity.this, message);
+                    }
+                });
+    }
+
+    private void updatePicture() {
+
+        String accessToken = (String) SharePreferenceUtil.
+                get(this, SP_Constants.ACCESS_TOKEN,"");
+
+        final File file ;
+        if (mCurrentPictureId == -1) {
+            file = mDestFile;
+        } else {
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), mCurrentPictureId);
+            BitmapUtil.saveBitmapToSDCard(bitmap,Constants.FILE_DIR + "crop.jpg");
+            file = new File(Constants.FILE_DIR + "crop.jpg");
+        }
+
+
+        OkHttpUtils
+                .post()
+                .tag(this)
+                .addFile("file", "crop.jpg", file)
+                .url(Constants.HTTP_UPLOAD_PICTURE)
+                .addHeader("access-token",accessToken)
+                .build()
+                .execute(new MyStringCallback<UploadPicBean>(this, UploadPicBean.class, true, false) {
+                    @Override
+                    public void onSuccess(UploadPicBean data) {
+                        saveFamily(data.getId());
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        ToastUtil.showToast(HomeDetailActivity.this, message);
+
+                    }
+                });
+    }
+
+
+    private void showConfirmDialog(final boolean isDelete){
+        final MyAlertDialog dialog = new MyAlertDialog(this);
+        dialog.show();
+        dialog.setTitle("警告");
+        if(isDelete){
+            dialog.setText("是否确认删除此家庭，此操作不可逆");
+        }else {
+            dialog.setText("是否确认退出此家庭，此操作不可逆");
+        }
+
+        dialog.setPositiveListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if(isDelete){
+                    deleteFamily();
+                }else {
+                    exitFamily();
+                }
+
+            }
+        });
+
+        dialog.setNegativeListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -249,7 +391,28 @@ public class HomeDetailActivity extends BaseActivity implements View.OnClickList
                 showDialog();
                 break;
             case R.id.delete_home_layout:
-                exitFamily();
+                showConfirmDialog(false);
+
+                break;
+            case R.id.save_tv:
+
+                if (TextUtils.isEmpty(mHomeNameTV.getText().toString())) {
+                    ToastUtil.showToast(this, "请输入家庭名称");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(mHomeAddressTV.getText().toString())) {
+                    ToastUtil.showToast(this, "请输入家庭地址");
+                    return;
+                }
+
+                if(mCurrentPictureId == 0){
+                    String [] strings = familyImg.split("/");
+                    saveFamily(strings[strings.length - 1]);
+
+                }else {
+                    updatePicture();
+                }
                 break;
 
         }
@@ -326,7 +489,7 @@ public class HomeDetailActivity extends BaseActivity implements View.OnClickList
                 mHomeImg.setImageBitmap(PhotoUtils.getBitmapFromUri
                         (Uri.fromFile(mDestFile), this));
 
-                mCurrentPictureId = 0;
+                mCurrentPictureId = -1;
 
                 break;
         }

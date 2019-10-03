@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:name="com.qqcs.smartHouse.application.MyApplication"
@@ -88,7 +89,26 @@
             android:name="com.qqcs.smartHouse.activity.WebActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
-
+        <activity
+            android:name="com.qqcs.smartHouse.activity.NickNameActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.ChangePhoneActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.MemberManageActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.AddMemberActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.MemberDetailActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

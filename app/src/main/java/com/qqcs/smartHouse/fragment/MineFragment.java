@@ -16,6 +16,7 @@ import com.qqcs.smartHouse.activity.FillInfomationActivity;
 import com.qqcs.smartHouse.activity.HomeManageActivity;
 import com.qqcs.smartHouse.activity.LoginActivity;
 import com.qqcs.smartHouse.activity.MainActivity;
+import com.qqcs.smartHouse.activity.MemberManageActivity;
 import com.qqcs.smartHouse.activity.UserInfoActivity;
 import com.qqcs.smartHouse.activity.WelcomeHomeActivity;
 import com.qqcs.smartHouse.application.Constants;
@@ -152,8 +153,24 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                         mHomeTv.setText(data.getFamilyName());
                         mVersionTv.setText(data.getAppVersion());
                         mMessageTv.setText(data.getUnreadCount());
+
+                        //如果超过99条消息显示99+
+                        try {
+                            int num = Integer.parseInt(data.getUnreadCount());
+                            if(num > 99){
+                                mMessageTv.setText("99+");
+                            }
+                        }catch (Exception e){
+
+                        }
+                        //如果没有消息不显示提示
                         if(!data.getUnreadCount().equalsIgnoreCase("0")){
                             mMessageTv.setVisibility(View.VISIBLE);
+                        }
+
+                        //普通成员成员管理不显示
+                        if(data.getUserRole().equalsIgnoreCase(Constants.ROLE_NORMAL) ){
+                            mMemberLayout.setVisibility(View.GONE);
                         }
 
                     }
@@ -177,8 +194,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             case R.id.my_info_layout:
                 intent = new Intent(mContext, UserInfoActivity.class);
                 startActivity(intent);
+                break;
             case R.id.member_manage_layout:
-
+                intent = new Intent(mContext, MemberManageActivity.class);
+                startActivity(intent);
                 break;
             case R.id.version_manage_layout:
 

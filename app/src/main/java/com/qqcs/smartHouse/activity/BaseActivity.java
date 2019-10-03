@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.qqcs.smartHouse.R;
+import com.qqcs.smartHouse.utils.ActivityManagerUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 
@@ -23,6 +24,8 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initSystemBar(this, R.color.system_bar_bg);
+        ActivityManagerUtil.getInstance().pushOneActivity(this);
+
     }
 
     /**
@@ -159,6 +162,8 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(this);
+        ActivityManagerUtil.getInstance().popOneActivity(this);
+
     }
 
 }

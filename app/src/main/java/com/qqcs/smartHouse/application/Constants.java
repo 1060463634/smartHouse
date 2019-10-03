@@ -20,9 +20,17 @@ public class Constants {
     public static final String HTTP_ADD_FAMILY_MEMBER = HTTP_SERVER_DOMAIN + "/app/family/member/create";
     public static final String HTTP_DELETE_FAMILY_MEMBER = HTTP_SERVER_DOMAIN + "/app/family/member/delete";
     public static final String HTTP_GET_CURRENT_INFO = HTTP_SERVER_DOMAIN + "/app/user/getCurrentInfo";
+
+    //个人中心
     public static final String HTTP_GET_FAMILY_LIST = HTTP_SERVER_DOMAIN + "/app/family/list";
     public static final String HTTP_DELETE_FAMILY = HTTP_SERVER_DOMAIN + "/app/family/delete";
     public static final String HTTP_QUIT_FAMILY = HTTP_SERVER_DOMAIN + "/app/family/member/quit";
+    public static final String HTTP_UPDATE_FAMILY = HTTP_SERVER_DOMAIN + "/app/family/update";
+    public static final String HTTP_GET_USER_INFO = HTTP_SERVER_DOMAIN + "/app/user/getCurrentUserInfo";
+    public static final String HTTP_UPDATE_USER_INFO = HTTP_SERVER_DOMAIN + "/app/user/updateUserInfo";
+    public static final String HTTP_SEND_CHANGE_PHONE_CODE = HTTP_SERVER_DOMAIN + "/app/user/sendChangePhoneCode";
+    public static final String HTTP_CHANGE_PHONE = HTTP_SERVER_DOMAIN + "/app/user/changeUserPhone";
+    public static final String HTTP_UPDATE_MEMBER = HTTP_SERVER_DOMAIN + "/app/family/member/update";
 
 
     /**
@@ -31,6 +39,7 @@ public class Constants {
     public static  String ROLE_LOAD = "0"; //户主
     public static  String ROLE_MANAGE = "1"; //管理员
     public static  String ROLE_NORMAL = "2"; //普通成员
+
 
 
 

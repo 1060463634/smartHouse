@@ -25,7 +25,6 @@
                 android:layout_marginLeft="20dp"
                 android:padding="3dp"
                 android:background="@drawable/shape_home_img_border"
-                android:src="@drawable/ic_home_1"
                 android:scaleType="fitXY"/>
 
             <TextView
@@ -33,7 +32,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:text="我的家庭一"
                 android:textColor="#ffffffff"
                 android:textSize="18dp"
                 />
@@ -69,7 +67,7 @@
             android:layout_marginRight="15dp"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="11dp"
+            android:textSize="10dp"
             android:visibility="invisible"
             android:text="2"/>
 

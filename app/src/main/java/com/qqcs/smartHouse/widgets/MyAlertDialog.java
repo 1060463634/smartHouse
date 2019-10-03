@@ -14,6 +14,7 @@ public class MyAlertDialog extends Dialog {
     private Button mConfirmButton;
     private Button mCancelButton;
     private TextView mTextTv;
+    private TextView mTitleTv;
 
     public MyAlertDialog(Context context) {
         super(context, R.style.alert_dialog);
@@ -28,9 +29,12 @@ public class MyAlertDialog extends Dialog {
         mConfirmButton = (Button)findViewById(R.id.confirm_btn);
         mCancelButton = (Button)findViewById(R.id.cancel_btn);
         mTextTv = (TextView) findViewById(R.id.text_tv);
-
+        mTitleTv = (TextView) findViewById(R.id.title_tv);
     }
 
+    public void setTitle(String text ){
+        mTitleTv.setText(text);
+    }
     public void setText(String text ){
         mTextTv.setText(text);
     }
