@@ -32,6 +32,10 @@ public class Constants {
     public static final String HTTP_CHANGE_PHONE = HTTP_SERVER_DOMAIN + "/app/user/changeUserPhone";
     public static final String HTTP_UPDATE_MEMBER = HTTP_SERVER_DOMAIN + "/app/family/member/update";
 
+    //首页
+    public static final String HTTP_GET_ROOM_LIST = HTTP_SERVER_DOMAIN + "/app/room/listByFamily";
+
+
 
     /**
      * 普通常量

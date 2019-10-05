@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 import okhttp3.MediaType;
 
 
-public class MemberDetailActivity extends BaseActivity implements View.OnClickListener {
+public class MemberDetailActivity extends BaseActivity{
 
 
     @BindView(R.id.nick_name_tv)
@@ -90,6 +90,7 @@ public class MemberDetailActivity extends BaseActivity implements View.OnClickLi
         mRoleSpinner.setAdapter(adapter);
         if(userRole.equalsIgnoreCase(Constants.ROLE_LOAD)){
             mRoleLayout.setVisibility(View.GONE);
+            mDeleteMemberBtn.setVisibility(View.GONE);
 
         } else if(userRole.equalsIgnoreCase(Constants.ROLE_MANAGE)){
             mRoleSpinner.setSelection(1);
@@ -194,7 +195,7 @@ public class MemberDetailActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         Intent intent;
         switch (v.getId()) {
 

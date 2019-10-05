@@ -24,6 +24,8 @@ public class MainActivity extends BaseActivity {
     @BindView(android.R.id.tabhost)
     FragmentTabHost mFragmentTabHost;
 
+    private TextView mMessageNumTv;
+
     private long startTime;
     private String mTexts[] = {"家", "情景", "健康", "服务", "我的"};
     private Class mFragments[] = {HomeFragment.class, ScenceFragment.class,
@@ -58,7 +60,30 @@ public class MainActivity extends BaseActivity {
         TextView tv = (TextView) view.findViewById(R.id.tab_tv);
         img.setImageResource(mImages[i]);
         tv.setText(mTexts[i]);
+
+        if (i == 4) {
+            mMessageNumTv = view.findViewById(R.id.unread_num_tv);
+        }
         return view;
+    }
+
+    public void setmMessageNumTv(String number) {
+
+        mMessageNumTv.setText(number);
+
+        //如果超过99条消息显示99+
+        try {
+            int num = Integer.parseInt(number);
+            if (num > 99) {
+                mMessageNumTv.setText("99+");
+            }
+        } catch (Exception e) {
+
+        }
+        //如果没有消息不显示提示
+        if (!number.equalsIgnoreCase("0")) {
+            mMessageNumTv.setVisibility(View.VISIBLE);
+        }
     }
 
 

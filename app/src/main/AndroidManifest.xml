@@ -109,6 +109,14 @@
             android:name="com.qqcs.smartHouse.activity.MemberDetailActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.HomeQrcodeActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.RoomManageActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 import okhttp3.MediaType;
 
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+public class LoginActivity extends BaseActivity{
 
     @BindView(R.id.phone_layout)
     LinearLayout mPhoneLayout;
@@ -246,7 +246,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.next_btn:

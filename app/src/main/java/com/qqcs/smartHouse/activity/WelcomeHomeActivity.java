@@ -32,7 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class WelcomeHomeActivity extends BaseActivity implements View.OnClickListener {
+public class WelcomeHomeActivity extends BaseActivity{
 
     public static final int REQUEST_CREATE_FAMILY = 101;
 
@@ -93,7 +93,7 @@ public class WelcomeHomeActivity extends BaseActivity implements View.OnClickLis
 
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.create_home_btn:
@@ -102,7 +102,7 @@ public class WelcomeHomeActivity extends BaseActivity implements View.OnClickLis
                 startActivityForResult(intent,REQUEST_CREATE_FAMILY);
                 break;
             case R.id.enter_home_btn:
-
+                break;
             case R.id.back_img:
                 finish();
 

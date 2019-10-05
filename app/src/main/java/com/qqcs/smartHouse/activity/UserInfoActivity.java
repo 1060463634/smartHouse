@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 import okhttp3.MediaType;
 
 
-public class UserInfoActivity extends BaseActivity implements View.OnClickListener{
+public class UserInfoActivity extends BaseActivity{
 
     @BindView(R.id.nick_name_layout)
     RelativeLayout mNickNameLayout;
@@ -159,7 +159,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
 
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         Intent intent;
         switch (v.getId()){
             case R.id.nick_name_layout:

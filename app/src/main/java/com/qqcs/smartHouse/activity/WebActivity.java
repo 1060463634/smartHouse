@@ -8,7 +8,7 @@ import android.view.View;
 import com.qqcs.smartHouse.R;
 import com.qqcs.smartHouse.widgets.MyWebView;
 
-public class WebActivity extends BaseActivity implements View.OnClickListener{
+public class WebActivity extends BaseActivity{
 
     private MyWebView mWebView;
 
@@ -70,7 +70,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener{
 
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         switch (v.getId()){
             case R.id.back_img:
 

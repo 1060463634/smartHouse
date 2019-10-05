@@ -2,6 +2,7 @@ package com.qqcs.smartHouse.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -34,7 +35,7 @@ import butterknife.ButterKnife;
 import okhttp3.MediaType;
 
 
-public class MemberManageActivity extends BaseActivity implements View.OnClickListener{
+public class MemberManageActivity extends BaseActivity{
 
 
     @BindView(R.id.list_view)
@@ -42,7 +43,7 @@ public class MemberManageActivity extends BaseActivity implements View.OnClickLi
 
     private ArrayList<FamilyMemberBean> mDataSource = new ArrayList<>();
     private MemberManageAdapter mAdapter;
-
+    private String mFamilyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,8 @@ public class MemberManageActivity extends BaseActivity implements View.OnClickLi
 
 
     private void initView(){
+        mFamilyId = getIntent().getStringExtra("familyId");
+
         getData();
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -81,8 +84,16 @@ public class MemberManageActivity extends BaseActivity implements View.OnClickLi
     private void getData() {
         String accessToken = (String) SharePreferenceUtil.
                 get(this, SP_Constants.ACCESS_TOKEN,"");
-        String familyId = (String) SharePreferenceUtil.
-                get(this, SP_Constants.CURRENT_FAMILY_ID,"");
+
+        String familyId;
+        if(TextUtils.isEmpty(mFamilyId)){
+            familyId = (String) SharePreferenceUtil.
+                    get(this, SP_Constants.CURRENT_FAMILY_ID,"");
+
+        }else {
+            familyId = mFamilyId;
+        }
+
         String timestamp = System.currentTimeMillis() + "";
         JSONObject object = CommonUtil.getRequstJson(getApplicationContext());
         JSONObject dataObject = new JSONObject();
@@ -133,11 +144,12 @@ public class MemberManageActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         Intent intent;
         switch (v.getId()){
             case R.id.more_img:
                 intent = new Intent(this, AddMemberActivity.class);
+                intent.putExtra("familyId",mFamilyId);
                 startActivityForResult(intent,1);
 
                 break;

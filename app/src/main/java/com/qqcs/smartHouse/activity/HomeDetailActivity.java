@@ -52,7 +52,7 @@ import static com.qqcs.smartHouse.activity.CreateHomeActivity.REQUEST_SELECT_DEM
 import static com.qqcs.smartHouse.activity.CreateHomeActivity.REQUEST_SELECT_PIC;
 
 
-public class HomeDetailActivity extends BaseActivity implements View.OnClickListener{
+public class HomeDetailActivity extends BaseActivity{
 
     @BindView(R.id.home_img_layout)
     RelativeLayout mHomeImgLayout;
@@ -133,6 +133,8 @@ public class HomeDetailActivity extends BaseActivity implements View.OnClickList
         mHomeNameTV.setSelection(mHomeNameTV.getText().length());
         mHomeImgLayout.setOnClickListener(this);
         mSaveTV.setOnClickListener(this);
+        mQrcodeLayout.setOnClickListener(this);
+        mHomeMemberLayout.setOnClickListener(this);
 
         //初始化用户操作权限
         if(userRole.equalsIgnoreCase(Constants.ROLE_MANAGE)){
@@ -384,7 +386,7 @@ public class HomeDetailActivity extends BaseActivity implements View.OnClickList
 
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         Intent intent;
         switch (v.getId()){
             case R.id.home_img_layout:
@@ -413,6 +415,16 @@ public class HomeDetailActivity extends BaseActivity implements View.OnClickList
                 }else {
                     updatePicture();
                 }
+                break;
+            case R.id.home_qrcode_layout:
+                intent = new Intent(this,HomeQrcodeActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.home_member_layout:
+                intent = new Intent(this,MemberManageActivity.class);
+                intent.putExtra("familyId",familyId);
+                startActivity(intent);
                 break;
 
         }

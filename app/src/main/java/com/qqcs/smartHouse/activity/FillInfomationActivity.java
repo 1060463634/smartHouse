@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 import okhttp3.MediaType;
 
 
-public class FillInfomationActivity extends BaseActivity implements View.OnClickListener {
+public class FillInfomationActivity extends BaseActivity{
 
 
     @BindView(R.id.phone_edt)
@@ -224,7 +224,7 @@ public class FillInfomationActivity extends BaseActivity implements View.OnClick
 
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.add_member_img:

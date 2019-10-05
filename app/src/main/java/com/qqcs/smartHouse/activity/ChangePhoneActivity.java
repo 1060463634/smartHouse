@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 import okhttp3.MediaType;
 
 
-public class ChangePhoneActivity extends BaseActivity implements View.OnClickListener{
+public class ChangePhoneActivity extends BaseActivity{
 
 
     @BindView(R.id.save_btn)
@@ -187,7 +187,7 @@ public class ChangePhoneActivity extends BaseActivity implements View.OnClickLis
 
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         switch (v.getId()){
             case R.id.save_btn:
                 changePhone(mVerCodeEdt.getText().toString(),

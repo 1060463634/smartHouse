@@ -18,7 +18,7 @@ import com.qqcs.smartHouse.utils.ActivityManagerUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends FragmentActivity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +164,25 @@ public abstract class BaseActivity extends FragmentActivity {
         OkHttpUtils.getInstance().cancelTag(this);
         ActivityManagerUtil.getInstance().popOneActivity(this);
 
+    }
+
+
+    /**
+     *两次点击按钮之间的点击间隔不能少于1000毫秒
+      */
+    private static final int MIN_CLICK_DELAY_TIME = 500;
+    private static long lastClickTime;
+
+    public void onMultiClick(View v){}
+
+    @Override
+    public void onClick(View v) {
+        long curClickTime = System.currentTimeMillis();
+        if((curClickTime - lastClickTime) >= MIN_CLICK_DELAY_TIME) {
+            // 超过点击间隔后再将lastClickTime重置为当前点击时间
+            lastClickTime = curClickTime;
+            onMultiClick(v);
+        }
     }
 
 }

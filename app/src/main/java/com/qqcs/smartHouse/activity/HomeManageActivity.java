@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 import okhttp3.MediaType;
 
 
-public class HomeManageActivity extends BaseActivity implements View.OnClickListener{
+public class HomeManageActivity extends BaseActivity{
 
 
     public static final int REQUEST_CREATE_FAMILY = 101;
@@ -164,7 +164,7 @@ public class HomeManageActivity extends BaseActivity implements View.OnClickList
 
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         Intent intent;
         switch (v.getId()){
             case R.id.more_img:

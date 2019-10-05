@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 import okhttp3.MediaType;
 
 
-public class NickNameActivity extends BaseActivity implements View.OnClickListener{
+public class NickNameActivity extends BaseActivity{
 
 
     @BindView(R.id.save_btn)
@@ -116,7 +116,7 @@ public class NickNameActivity extends BaseActivity implements View.OnClickListen
 
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         switch (v.getId()){
             case R.id.save_btn:
                 updateUserInfo(mNickNameEdt.getText().toString());

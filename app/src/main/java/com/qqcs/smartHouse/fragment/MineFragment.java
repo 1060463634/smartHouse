@@ -41,10 +41,7 @@ import butterknife.Unbinder;
 import okhttp3.MediaType;
 
 
-/**
- * Created by ameng on 2016/6/15.
- */
-public class MineFragment extends Fragment implements View.OnClickListener {
+public class MineFragment extends BaseFragment{
 
     @BindView(R.id.my_home_layout)
     LinearLayout mHomeLayout;
@@ -86,6 +83,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setSystemBarTransPrent();
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_mine, null);
 
@@ -184,7 +182,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         Intent intent;
         switch (v.getId()){
             case R.id.my_home_layout:

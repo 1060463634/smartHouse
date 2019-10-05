@@ -50,7 +50,7 @@ import okhttp3.Call;
 import okhttp3.MediaType;
 
 
-public class CreateHomeActivity extends BaseActivity implements View.OnClickListener {
+public class CreateHomeActivity extends BaseActivity{
 
 
     public static final int REQUEST_CAPTURE_PIC = 101;
@@ -259,7 +259,7 @@ public class CreateHomeActivity extends BaseActivity implements View.OnClickList
     }
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.next_btn:

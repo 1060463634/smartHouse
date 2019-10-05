@@ -1,10 +1,13 @@
 package com.qqcs.smartHouse.fragment;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.qqcs.smartHouse.R;
@@ -17,7 +20,7 @@ import butterknife.Unbinder;
 /**
  * Created by ameng on 2016/6/15.
  */
-public class HealthFragment extends Fragment {
+public class HealthFragment extends BaseFragment {
     private View mRootView;
     private Context mContext;
     private Unbinder bind;
@@ -34,6 +37,7 @@ public class HealthFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setSystemBarWhite();
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_health, null);
 

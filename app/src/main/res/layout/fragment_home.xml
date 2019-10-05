@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tl="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_home_bg">
@@ -7,9 +9,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:paddingLeft="25dp"
-        android:paddingRight="25dp"
-        android:orientation="vertical">
+        android:paddingRight="25dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -18,59 +21,73 @@
                 android:id="@+id/welcome_date_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="46dp"
+                android:layout_marginTop="47dp"
                 android:text="2019，7月"
                 android:textColor="#ffffffff"
-                android:textSize="13dp"
-                />
+                android:textSize="13dp" />
 
             <TextView
+                android:id="@+id/home_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/welcome_date_tv"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:text="欢迎回家"
                 android:textColor="#ffffffff"
-                android:textSize="20dp"
-                />
+                android:textSize="20dp" />
+
             <ImageView
+                android:id="@+id/home_img"
                 android:layout_width="54dp"
                 android:layout_height="54dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="47dp"
-                android:padding="3dp"
                 android:background="@drawable/shape_home_img_border"
+                android:padding="3dp"
                 android:src="@drawable/ic_home_1" />
 
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="80dp"
-            android:background="@drawable/shape_layout_white"
-            android:gravity="center">
-
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginTop="15dp">
             <ImageView
+                android:id="@+id/room_manage_img"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_scanning" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:text="添加设备"
-                android:textColor="#333333"
-                android:textSize="16dp" />
+                android:layout_height="match_parent"
+                android:paddingRight="6dp"
+                android:src="@drawable/ic_room_setting" />
+
+            <com.flyco.tablayout.SlidingTabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                tl:tl_indicator_corner_radius="3dp"
+                tl:tl_indicator_height="6dp"
+                tl:tl_indicator_width="6dp"
+                tl:tl_textsize="14dp"
+                tl:tl_textBold="SELECT"
+                tl:tl_tab_width="54dp"
+                />
 
         </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp"
+            android:layout_width="10dp"
+            android:layout_height="5dp"
+            android:layout_gravity="center_horizontal"/>
+
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="13dp"
-            android:background="@drawable/shape_layout_white">
-        </LinearLayout>
+            android:background="@drawable/shape_layout_white"></LinearLayout>
     </LinearLayout>
 
 

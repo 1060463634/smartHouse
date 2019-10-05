@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 import okhttp3.MediaType;
 
 
-public class AddMemberActivity extends BaseActivity implements View.OnClickListener {
+public class AddMemberActivity extends BaseActivity{
 
 
     @BindView(R.id.phone_edt)
@@ -58,6 +58,8 @@ public class AddMemberActivity extends BaseActivity implements View.OnClickListe
     @BindView(R.id.role_spinner)
     Spinner mRoleSpinner;
 
+    private String mFamilyId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +71,7 @@ public class AddMemberActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initView() {
+        mFamilyId = getIntent().getStringExtra("familyId");
         mOpenContactBtn.setOnClickListener(this);
         mSaveBtn.setOnClickListener(this);
         String[] mItems = {"普通成员","管理员"};
@@ -97,8 +100,15 @@ public class AddMemberActivity extends BaseActivity implements View.OnClickListe
 
         String accessToken = (String) SharePreferenceUtil.
                 get(this, SP_Constants.ACCESS_TOKEN,"");
-        String familyId = (String) SharePreferenceUtil.
-                get(this, SP_Constants.CURRENT_FAMILY_ID,"");
+
+        String familyId;
+        if(TextUtils.isEmpty(mFamilyId)){
+            familyId = (String) SharePreferenceUtil.
+                    get(this, SP_Constants.CURRENT_FAMILY_ID,"");
+
+        }else {
+            familyId = mFamilyId;
+        }
         String timestamp = System.currentTimeMillis() + "";
         JSONObject object = CommonUtil.getRequstJson(getApplicationContext());
         JSONObject dataObject = new JSONObject();
@@ -146,7 +156,7 @@ public class AddMemberActivity extends BaseActivity implements View.OnClickListe
 
 
     @Override
-    public void onClick(View v) {
+    public void onMultiClick(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.open_contact_btn:
