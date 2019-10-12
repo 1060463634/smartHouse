@@ -20,6 +20,8 @@ public class Constants {
     public static final String HTTP_ADD_FAMILY_MEMBER = HTTP_SERVER_DOMAIN + "/app/family/member/create";
     public static final String HTTP_DELETE_FAMILY_MEMBER = HTTP_SERVER_DOMAIN + "/app/family/member/delete";
     public static final String HTTP_GET_CURRENT_INFO = HTTP_SERVER_DOMAIN + "/app/user/getCurrentInfo";
+    public static final String HTTP_SEND_REGISTION_ID = HTTP_SERVER_DOMAIN + "/app/auth/user/updateClientInfo";
+
 
     //个人中心
     public static final String HTTP_GET_FAMILY_LIST = HTTP_SERVER_DOMAIN + "/app/family/list";
@@ -31,9 +33,20 @@ public class Constants {
     public static final String HTTP_SEND_CHANGE_PHONE_CODE = HTTP_SERVER_DOMAIN + "/app/user/sendChangePhoneCode";
     public static final String HTTP_CHANGE_PHONE = HTTP_SERVER_DOMAIN + "/app/user/changeUserPhone";
     public static final String HTTP_UPDATE_MEMBER = HTTP_SERVER_DOMAIN + "/app/family/member/update";
+    public static final String HTTP_LOGOUT = HTTP_SERVER_DOMAIN + "/app/auth/logout";
+
 
     //首页
     public static final String HTTP_GET_ROOM_LIST = HTTP_SERVER_DOMAIN + "/app/room/listByFamily";
+    public static final String HTTP_ADD_ROOM = HTTP_SERVER_DOMAIN + "/app/room/create";
+    public static final String HTTP_UPDATE_ROOM = HTTP_SERVER_DOMAIN + "/app/room/update";
+    public static final String HTTP_DELETE_ROOM = HTTP_SERVER_DOMAIN + "/app/room/delete";
+    public static final String HTTP_GET_DEVICE_INFO = HTTP_SERVER_DOMAIN + "/app/device/listByFamily";
+    public static final String HTTP_DEVICE_COMMAND = HTTP_SERVER_DOMAIN + "/app/device/command";
+    public static final String HTTP_GET_FAMILY = HTTP_SERVER_DOMAIN + "/app/family/infoById";
+    public static final String HTTP_ENTER_FAMILY = HTTP_SERVER_DOMAIN + "/app/family/member/sendJoinRequest";
+    public static final String HTTP_GET_DEVICE_PROPS = HTTP_SERVER_DOMAIN + "/app/device/getProps";
+    public static final String HTTP_INFRARED_COMMAND = HTTP_SERVER_DOMAIN + "/app/device/infraredCommand";
 
 
 

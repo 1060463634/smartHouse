@@ -34,6 +34,8 @@ public class ScenceFragment extends BaseFragment {
     private View mRootView;
     private Context mContext;
     private Unbinder bind;
+    @BindView(R.id.night_scene_img)
+    ImageView mNightImg;
 
     @BindView(R.id.morning_scene_img)
     ImageView mMoringImg;
@@ -74,6 +76,7 @@ public class ScenceFragment extends BaseFragment {
 
 
     private void initView(){
+        mNightImg.setOnClickListener(this);
         mMoringImg.setOnClickListener(this);
         mLeaveImg.setOnClickListener(this);
         mBackImg.setOnClickListener(this);
@@ -85,6 +88,16 @@ public class ScenceFragment extends BaseFragment {
         Toast toast2;
         View view;
         switch (v.getId()) {
+            case R.id.night_scene_img:
+
+                toast2 = new Toast(mContext);
+                view = LayoutInflater.from(mContext).inflate(R.layout.toast_commom, null);
+                ((TextView)view.findViewById(R.id.text)).setText("开启晚安模式");
+                toast2.setView(view);
+                toast2.setGravity(Gravity.CENTER, 0, 0);
+                toast2.show();
+                break;
+
             case R.id.morning_scene_img:
 
                 toast2 = new Toast(mContext);

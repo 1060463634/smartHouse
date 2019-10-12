@@ -2,6 +2,8 @@ package com.qqcs.smartHouse.application;
 
 import android.view.View;
 
+import com.qqcs.smartHouse.utils.ToastUtil;
+
 public abstract class OnMultiClickListener implements View.OnClickListener{
 
     // 两次点击按钮之间的点击间隔不能少于1000毫秒
@@ -17,6 +19,9 @@ public abstract class OnMultiClickListener implements View.OnClickListener{
             // 超过点击间隔后再将lastClickTime重置为当前点击时间
             lastClickTime = curClickTime;
             onMultiClick(v);
+        } else {
+            ToastUtil.showToast(MyApplication.getApplication()
+                    .getApplicationContext(),"您手速太快了吧～");
         }
     }
 

@@ -27,11 +27,11 @@ public class MainActivity extends BaseActivity {
     private TextView mMessageNumTv;
 
     private long startTime;
-    private String mTexts[] = {"家", "情景", "健康", "服务", "我的"};
+    private String mTexts[] = {"家", "情景", "健康", "我的"};
     private Class mFragments[] = {HomeFragment.class, ScenceFragment.class,
-            HealthFragment.class, ServiceFragment.class, MineFragment.class};
+            HealthFragment.class,  MineFragment.class};
     private int mImages[] = {R.drawable.selector_tab_home, R.drawable.selector_tab_scence,
-            R.drawable.selector_tab_health, R.drawable.selector_tab_service, R.drawable.selector_tab_mine};
+            R.drawable.selector_tab_health, R.drawable.selector_tab_mine};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity {
         img.setImageResource(mImages[i]);
         tv.setText(mTexts[i]);
 
-        if (i == 4) {
+        if (i == 3) {
             mMessageNumTv = view.findViewById(R.id.unread_num_tv);
         }
         return view;

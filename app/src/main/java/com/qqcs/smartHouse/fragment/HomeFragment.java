@@ -9,13 +9,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,10 +30,15 @@ import com.qqcs.smartHouse.activity.HomeManageActivity;
 import com.qqcs.smartHouse.activity.MainActivity;
 
 import com.qqcs.smartHouse.activity.RoomManageActivity;
+import com.qqcs.smartHouse.adapter.DeviceListAdapter;
+import com.qqcs.smartHouse.adapter.RoomManageAdapter;
 import com.qqcs.smartHouse.application.Constants;
 import com.qqcs.smartHouse.application.SP_Constants;
 import com.qqcs.smartHouse.models.CurUserInfoBean;
-import com.qqcs.smartHouse.models.FamilyInfoBean;
+import com.qqcs.smartHouse.models.DeviceBean;
+import com.qqcs.smartHouse.models.EventBusBean;
+import com.qqcs.smartHouse.models.RoomBean;
+import com.qqcs.smartHouse.models.RoomListBean;
 import com.qqcs.smartHouse.network.CommonJsonList;
 import com.qqcs.smartHouse.network.MyStringCallback;
 import com.qqcs.smartHouse.utils.ActivityManagerUtil;
@@ -43,22 +51,32 @@ import com.qqcs.smartHouse.utils.ToastUtil;
 import com.qqcs.smartHouse.widgets.MyHomesListPopupWindow;
 import com.zhy.http.okhttp.OkHttpUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.header.MaterialHeader;
+import okhttp3.Call;
 import okhttp3.MediaType;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
  * Created by ameng on 2016/6/15.
  */
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends BaseFragment implements OnTabSelectListener{
 
     private View mRootView;
     private Context mContext;
@@ -82,20 +100,26 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.room_manage_img)
     ImageView mRoomManageImg;
 
+    @BindView(R.id.ptr_frame)
+    PtrFrameLayout mPtrFrame;
+
+    @BindView(R.id.device_list)
+    ListView mDeviceList;
+
     private MyHomesListPopupWindow mPopwindow;
 
-    private final String[] mTitles = {
-            "全部", "会客厅", "卧室"
-            , "卫生间", "书房", "厨房", "浴室"
-    };
+    private List<RoomBean> mRoomTitles = new ArrayList();
     private MyPagerAdapter mAdapter;
     private ArrayList<Fragment> mFragments = new ArrayList<>();
+    private DeviceListAdapter mDeviceAdapter;
+    private ArrayList<DeviceBean> mDeviceDatas = new ArrayList<>();
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
+        EventBus.getDefault().register(this);
     }
 
 
@@ -129,35 +153,40 @@ public class HomeFragment extends BaseFragment {
                 + calendar.get(Calendar.DAY_OF_MONTH) + "日";
         mWelcomeDateTv.setText(date);
         mHomeImg.setOnClickListener(this);
+
         getCurrentInfo();
+        getRoomInfo();
 
         //初始化popupwindow
-        mPopwindow = new MyHomesListPopupWindow(getContext(),mHomeImg);
+        mPopwindow = new MyHomesListPopupWindow(getContext(),this,mHomeImg);
 
+        // 下拉刷新
+        final MaterialHeader header = new MaterialHeader(mContext);
+        int[] colors = getResources().getIntArray(R.array.google_colors);
+        header.setColorSchemeColors(colors);
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setPadding(0, CommonUtil.dip2px(mContext,15), 0, CommonUtil.dip2px(mContext,10));
+        header.setPtrFrameLayout(mPtrFrame);
+        mPtrFrame.setHeaderView(header);
+        mPtrFrame.addPtrUIHandler(header);
 
-        //初始化tab
-        for (String title : mTitles) {
-            mFragments.add(SimpleCardFragment.getInstance(title));
-        }
-        mAdapter = new MyPagerAdapter(getFragmentManager());
-        mViewPager.setAdapter(mAdapter);
-        mTabLayout.setViewPager(mViewPager);
-        mTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
+        mPtrFrame.setPtrHandler(new PtrDefaultHandler() {
             @Override
-            public void onTabSelect(int position) {
-                LogUtil.d("onTabSelect --->" + position);
-
-            }
-
-            @Override
-            public void onTabReselect(int position) {
-                LogUtil.d("onTabSelec --->" + position);
-
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                frame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getDeviceInfo(mRoomTitles.get(mTabLayout.getCurrentTab()).getRoomId() );
+                        getCurrentInfo();
+                        mPopwindow = new MyHomesListPopupWindow(getContext(),HomeFragment.this,mHomeImg);
+                    }
+                }, 100);
             }
         });
 
-
     }
+
+
 
 
     private void getCurrentInfo() {
@@ -209,6 +238,166 @@ public class HomeFragment extends BaseFragment {
                 });
     }
 
+    public void getRoomInfo() {
+        String accessToken = (String) SharePreferenceUtil.
+                get(mContext, SP_Constants.ACCESS_TOKEN,"");
+
+        String familyId = (String) SharePreferenceUtil.
+                get(mContext, SP_Constants.CURRENT_FAMILY_ID,"");
+
+
+        String timestamp = System.currentTimeMillis() + "";
+        JSONObject object = CommonUtil.getRequstJson(mContext.getApplicationContext());
+        JSONObject dataObject = new JSONObject();
+
+        try {
+            dataObject.put("familyId", familyId);
+            dataObject.put("timestamp", timestamp);
+
+            object.put("data", dataObject);
+            object.put("sign", MD5Utils.md5s(familyId + timestamp));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkHttpUtils
+                .postString()
+                .tag(this)
+                .url(Constants.HTTP_GET_ROOM_LIST)
+                .addHeader("access-token",accessToken)
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+                .content(object.toString())
+                .build()
+                .execute(new MyStringCallback<RoomListBean>(mContext, RoomListBean.class, false, false) {
+
+                    @Override
+                    public void onSuccess(RoomListBean json) {
+                        ImageLoaderUtil.getInstance().displayImage
+                                (Constants.HTTP_SERVER_DOMAIN + json.getFamilyImg(),mHomeImg);
+                        mHomeNameTv.setText(json.getFamilyName());
+
+                        mRoomTitles.clear();
+                        mFragments.clear();
+                        mRoomTitles.addAll(json.getRooms());
+
+                        for (RoomBean title : mRoomTitles) {
+                            mFragments.add(SimpleCardFragment.getInstance());
+                        }
+
+                        mAdapter = new MyPagerAdapter(getFragmentManager());
+                        mViewPager.setAdapter(mAdapter);
+
+                        mTabLayout.setViewPager(mViewPager);
+                        mTabLayout.setOnTabSelectListener(HomeFragment.this);
+
+                        getDeviceInfo(json.getRooms().get(0).getRoomId());
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        ToastUtil.showToast(mContext, message);
+                    }
+                });
+    }
+
+    private void getDeviceInfo(String roomId) {
+
+        String accessToken = (String) SharePreferenceUtil.
+                get(mContext, SP_Constants.ACCESS_TOKEN,"");
+
+        String familyId = (String) SharePreferenceUtil.
+                get(mContext, SP_Constants.CURRENT_FAMILY_ID,"");
+
+        String timestamp = System.currentTimeMillis() + "";
+        JSONObject object = CommonUtil.getRequstJson(mContext);
+        JSONObject dataObject = new JSONObject();
+
+        try {
+            dataObject.put("familyId", familyId);
+            dataObject.put("roomId", roomId);
+            dataObject.put("timestamp", timestamp);
+
+            object.put("data", dataObject);
+            object.put("sign", MD5Utils.md5s(familyId + roomId + timestamp));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkHttpUtils
+                .postString()
+                .tag(this)
+                .url(Constants.HTTP_GET_DEVICE_INFO)
+                .addHeader("access-token",accessToken)
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+                .content(object.toString())
+                .build()
+                .execute(new MyStringCallback<DeviceBean>(mContext,
+                        DeviceBean.class, false, true) {
+
+                    @Override
+                    public void onSuccess(CommonJsonList<DeviceBean> json) {
+                        mPtrFrame.refreshComplete();
+                        mDeviceDatas.clear();
+                        mDeviceDatas.addAll(json.getData());
+                        setDeviceAdapter();
+                    }
+
+
+                    @Override
+                    public void onFailure(String message) {
+                        ToastUtil.showToast(mContext, message);
+                        mPtrFrame.refreshComplete();
+                    }
+                    @Override
+                    public void onError(Call call, Exception e, int i) {
+                        super.onError(call, e, i);
+                        mPtrFrame.refreshComplete();
+                    }
+
+                });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(EventBusBean event){
+
+        switch (event.getType()){
+
+            case EventBusBean.FAMILY_ID_CHANGED:
+                getRoomInfo();
+                mPopwindow = new MyHomesListPopupWindow(getContext(),
+                        HomeFragment.this,mHomeImg);
+
+                break;
+
+        }
+
+    }
+
+    @Override
+    public void onTabSelect(int position) {
+        LogUtil.d("onTabSelect:" + position);
+        getDeviceInfo(mRoomTitles.get(position).getRoomId());
+    }
+
+    @Override
+    public void onTabReselect(int position) {
+        LogUtil.d("onTabReselect:" + position);
+        getDeviceInfo(mRoomTitles.get(position).getRoomId());
+    }
+
+
+    public void setDeviceAdapter() {
+        if (mDeviceAdapter == null) {
+            mDeviceAdapter = new DeviceListAdapter(mContext, mDeviceDatas);
+            mDeviceList.setAdapter(mDeviceAdapter);
+        } else {
+            mDeviceAdapter.refreshData(mDeviceDatas);
+        }
+
+    }
+
     @Override
     public void onMultiClick(View v) {
         Intent intent;
@@ -219,10 +408,25 @@ public class HomeFragment extends BaseFragment {
                 break;
             case R.id.room_manage_img:
                 intent = new Intent(mContext, RoomManageActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,1);
 
                 break;
 
+
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        switch (requestCode) {
+
+            case 1:
+                getRoomInfo();
+                break;
 
         }
     }
@@ -232,6 +436,7 @@ public class HomeFragment extends BaseFragment {
         super.onDestroy();
         //解除绑定
         bind.unbind();
+        EventBus.getDefault().unregister(this);
     }
 
 
@@ -242,12 +447,12 @@ public class HomeFragment extends BaseFragment {
 
         @Override
         public int getCount() {
-            return mFragments.size();
+            return mRoomTitles.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mTitles[position];
+            return mRoomTitles.get(position).getRoomName();
         }
 
         @Override

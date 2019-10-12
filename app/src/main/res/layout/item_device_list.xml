@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:swipeEnable="true"
+    app:leftSwipe="true"
+    app:ios="true">
+    <RelativeLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="53dp">
+
+        <ImageView
+            android:id="@+id/connect_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/selector_device_connect"/>
+
+        <ImageView
+            android:id="@+id/device_type_img"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/connect_img"
+            android:layout_marginLeft="20dp" />
+
+        <TextView
+            android:id="@+id/device_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/device_type_img"
+            android:layout_marginLeft="14dp"
+            android:textColor="@color/text_black"
+            android:textSize="16dp" />
+
+
+        <include layout="@layout/layout_line_gray"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_height="1px"/>
+
+    </RelativeLayout>
+
+    <!-- 侧滑菜单选项，这里可以有多个选项。我这里就用了置顶和删除两个选项-->
+
+    <Button
+        android:id="@+id/delete_btn"
+        android:layout_width="117dp"
+        android:background="@android:color/holo_red_dark"
+        android:layout_height="match_parent"
+        android:text="删除"
+        android:textSize="16dp"
+        android:textColor="@android:color/white"/>
+
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>
+
+
+

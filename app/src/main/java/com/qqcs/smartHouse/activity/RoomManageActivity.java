@@ -60,15 +60,16 @@ public class RoomManageActivity extends BaseActivity{
 
 
     private void initView(){
-
+        mSaveTv.setOnClickListener(this);
         getData();
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
-
+                Intent intent = new Intent(RoomManageActivity.this,RoomDetailActivity.class);
+                intent.putExtra("roomId",mDataSource.get(position).getRoomId());
+                intent.putExtra("roomName",mDataSource.get(position).getRoomName());
+                startActivityForResult(intent,1);
             }
         });
 
@@ -110,6 +111,9 @@ public class RoomManageActivity extends BaseActivity{
                     public void onSuccess(RoomListBean json) {
                         mDataSource.clear();
                         mDataSource.addAll(json.getRooms());
+                        if(mDataSource.size() != 0){
+                            mDataSource.remove(0);
+                        }
                         setMyAdapter();
                     }
 
@@ -134,9 +138,8 @@ public class RoomManageActivity extends BaseActivity{
     public void onMultiClick(View v) {
         Intent intent;
         switch (v.getId()){
-            case R.id.more_img:
-                intent = new Intent(this, AddMemberActivity.class);
-
+            case R.id.save_tv:
+                intent = new Intent(this, AddRoomActivity.class);
                 startActivityForResult(intent,1);
 
                 break;
@@ -154,6 +157,7 @@ public class RoomManageActivity extends BaseActivity{
 
             case 1:
                 getData();
+                setResult(RESULT_OK);
                 break;
 
         }

@@ -12,11 +12,9 @@ import com.qqcs.smartHouse.R;
 
 @SuppressLint("ValidFragment")
 public class SimpleCardFragment extends Fragment {
-    private String mTitle;
 
-    public static SimpleCardFragment getInstance(String title) {
+    public static SimpleCardFragment getInstance() {
         SimpleCardFragment sf = new SimpleCardFragment();
-        sf.mTitle = title;
         return sf;
     }
 

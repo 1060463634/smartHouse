@@ -12,6 +12,7 @@ import com.qqcs.smartHouse.R;
 import com.qqcs.smartHouse.adapter.HomeManageAdapter;
 import com.qqcs.smartHouse.application.Constants;
 import com.qqcs.smartHouse.application.SP_Constants;
+import com.qqcs.smartHouse.models.EventBusBean;
 import com.qqcs.smartHouse.models.FamilyInfoBean;
 import com.qqcs.smartHouse.models.FamilyMemberBean;
 import com.qqcs.smartHouse.network.CommonJsonList;
@@ -23,6 +24,7 @@ import com.qqcs.smartHouse.utils.SharePreferenceUtil;
 import com.qqcs.smartHouse.utils.ToastUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -134,8 +136,8 @@ public class HomeManageActivity extends BaseActivity{
                             if(!currentFamilyExsist){
                                 SharePreferenceUtil.put(HomeManageActivity.this,
                                         SP_Constants.CURRENT_FAMILY_ID, json.getData().get(0).getFamilyId());
-
-                                //todo 通知家庭切换
+                                // 通知家庭切换
+                                EventBus.getDefault().post(new EventBusBean(EventBusBean.FAMILY_ID_CHANGED));
 
                             }
 

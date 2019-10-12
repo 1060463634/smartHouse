@@ -43,7 +43,7 @@ public class LocationUtil {
         String bestProvider = locationM.getBestProvider(cri,true);
         if (!TextUtils.isEmpty(bestProvider)){
             Log.e(TAG,"bestProvider = "+ bestProvider + "可用");
-            locationM.requestLocationUpdates(bestProvider,60000 * 10,1000,locationListener);
+            locationM.requestLocationUpdates(bestProvider,1000 * 60,500,locationListener);
         }else if (locationM.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
             Log.e(TAG,LocationManager.NETWORK_PROVIDER + "可用");
             locationM.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,60000 * 10,1000,locationListener);

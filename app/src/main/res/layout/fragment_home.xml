@@ -44,7 +44,8 @@
                 android:layout_marginTop="47dp"
                 android:background="@drawable/shape_home_img_border"
                 android:padding="3dp"
-                android:src="@drawable/ic_home_1" />
+                android:src="@drawable/ic_home_1"
+                android:scaleType="fitXY"/>
 
         </RelativeLayout>
 
@@ -67,7 +68,7 @@
                 tl:tl_indicator_corner_radius="3dp"
                 tl:tl_indicator_height="6dp"
                 tl:tl_indicator_width="6dp"
-                tl:tl_textsize="14dp"
+                tl:tl_textsize="16dp"
                 tl:tl_textBold="SELECT"
                 tl:tl_tab_width="54dp"
                 />
@@ -80,14 +81,31 @@
             android:layout_height="5dp"
             android:layout_gravity="center_horizontal"/>
 
-
-
-
-        <LinearLayout
+        <in.srain.cube.views.ptr.PtrFrameLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ptr_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="13dp"
-            android:background="@drawable/shape_layout_white"></LinearLayout>
+            android:background="@drawable/shape_layout_white"
+            android:layout_marginTop="14dp"
+
+            app:ptr_duration_to_close="300"
+            app:ptr_duration_to_close_header="1000"
+            app:ptr_keep_header_when_refresh="true"
+            app:ptr_pull_to_fresh="false"
+            app:ptr_ratio_of_header_height_to_refresh="1.2"
+            app:ptr_resistance="1.7">
+
+            <ListView
+                android:id="@+id/device_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:listSelector="@color/text_hint" />
+
+        </in.srain.cube.views.ptr.PtrFrameLayout>
+
+
     </LinearLayout>
 
 

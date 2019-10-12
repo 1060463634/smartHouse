@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="434dp"
+        android:background="@drawable/shape_login_btn">
+
+        <View
+            android:id="@+id/view_label"
+            android:layout_width="match_parent"
+            android:layout_height="25dp" />
+
+        <RelativeLayout
+            android:id="@+id/layout_top"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_below="@id/view_label">
+
+            <ImageView
+                android:id="@+id/back_img"
+                android:layout_width="43dp"
+                android:layout_height="match_parent"
+                android:onClick="onBack"
+                android:scaleType="center"
+                android:src="@drawable/arrow_left_white" />
+
+            <TextView
+                android:id="@+id/tv_activity_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/wave_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/ic_wave" />
+
+        <RelativeLayout
+            android:id="@+id/control_label"
+            android:layout_width="243dp"
+            android:layout_height="243dp"
+            android:layout_above="@+id/wave_label"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ic_bgcircle">
+
+            <TextView
+                android:id="@+id/temp_num_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/ic_temp_circle"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="#FF3D81ED"
+                android:textSize="43dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/temp_num_tv"
+                android:layout_toRightOf="@+id/temp_num_tv"
+                android:src="@drawable/ic_temp_degree" />
+
+            <TextView
+                android:id="@+id/temp_small_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/temp_num_tv"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:text="设定温度"
+                android:textColor="#437cf5"
+                android:textSize="13dp" />
+
+
+            <ImageView
+                android:id="@+id/tv_left_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_left_arrow" />
+
+            <ImageView
+                android:id="@+id/tv_right_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_right_arrow" />
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/switch_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="23dp"
+                android:paddingBottom="23dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/switch_cbx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_air_switch" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/air_switch_padding"
+                    android:text="开关"
+                    android:textColor="#ff323232"
+                    android:textSize="@dimen/air_switch_text_size" />
+            </LinearLayout>
+
+            <include layout="@layout/layout_line_v"/>
+
+            <LinearLayout
+                android:id="@+id/cold_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="23dp"
+                android:paddingBottom="23dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/cold_cbx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_air_cold"
+                     />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/air_switch_padding"
+                    android:text="制冷"
+                    android:textColor="#ff323232"
+                    android:textSize="@dimen/air_switch_text_size" />
+            </LinearLayout>
+
+            <include layout="@layout/layout_line_v"/>
+
+            <LinearLayout
+                android:id="@+id/hot_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="23dp"
+                android:paddingBottom="23dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/hot_cbx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_air_hot"
+                     />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/air_switch_padding"
+                    android:text="制热"
+                    android:textColor="#ff323232"
+                    android:textSize="@dimen/air_switch_text_size" />
+
+            </LinearLayout>
+
+            <include layout="@layout/layout_line_v"/>
+
+            <LinearLayout
+                android:id="@+id/auto_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="23dp"
+                android:paddingBottom="23dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/auto_cbx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_air_auto"
+                     />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/air_switch_padding"
+                    android:text="自动"
+                    android:textColor="#ff323232"
+                    android:textSize="@dimen/air_switch_text_size" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <include layout="@layout/layout_line_gray"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/water_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="23dp"
+                android:paddingBottom="23dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/water_cbx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_air_water"
+                     />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/air_switch_padding"
+                    android:text="除湿"
+                    android:textColor="#ff323232"
+                    android:textSize="@dimen/air_switch_text_size" />
+            </LinearLayout>
+            <include layout="@layout/layout_line_v"/>
+
+            <LinearLayout
+                android:id="@+id/left_right_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="23dp"
+                android:paddingBottom="23dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/wind_lr_cbx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_air_wind_lr"
+                     />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/air_switch_padding"
+                    android:text="左右摆风"
+                    android:textColor="#ff323232"
+                    android:textSize="@dimen/air_switch_text_size" />
+            </LinearLayout>
+            <include layout="@layout/layout_line_v"/>
+
+            <LinearLayout
+                android:id="@+id/up_down_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="23dp"
+                android:paddingBottom="23dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/wind_ud_cbx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_air_wind_ud"
+                     />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/air_switch_padding"
+                    android:text="上下摆风"
+                    android:textColor="#ff323232"
+                    android:textSize="@dimen/air_switch_text_size" />
+
+            </LinearLayout>
+            <include layout="@layout/layout_line_v"/>
+
+            <LinearLayout
+                android:id="@+id/speed_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="23dp"
+                android:paddingBottom="23dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/speed_cbx"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/selector_air_speed"
+                         />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_wind_triangle"
+                        android:layout_gravity="bottom|right"
+                         />
+                </FrameLayout>
+
+
+                <TextView
+                    android:id="@+id/speed_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/air_switch_padding"
+                    android:text="风速-强风"
+                    android:textColor="#ff323232"
+                    android:textSize="@dimen/air_switch_text_size" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

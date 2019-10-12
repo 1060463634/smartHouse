@@ -109,6 +109,50 @@ public class UserInfoActivity extends BaseActivity{
                 });
     }
 
+    private void requestLogout(){
+        String accessToken = (String) SharePreferenceUtil.
+                get(this, SP_Constants.ACCESS_TOKEN,"");
+        String userId = (String) SharePreferenceUtil.
+                get(this, SP_Constants.USER_ID,"");
+        String registrationId = (String) SharePreferenceUtil.get(this,
+                SP_Constants.REGISTRATION_ID,"");
+        String timestamp = System.currentTimeMillis() + "";
+        JSONObject object = CommonUtil.getRequstJson(getApplicationContext());
+        JSONObject dataObject = new JSONObject();
+
+        try {
+            dataObject.put("uid", userId);
+            dataObject.put("registrationId", registrationId);
+            dataObject.put("timestamp", timestamp);
+            object.put("data", dataObject);
+            object.put("sign", MD5Utils.md5s(userId + "" + timestamp));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkHttpUtils
+                .postString()
+                .tag(this)
+                .url(Constants.HTTP_LOGOUT)
+                .addHeader("access-token",accessToken)
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+                .content(object.toString())
+                .build()
+                .execute(new MyStringCallback<Object>(this, Object.class, false, false) {
+
+                    @Override
+                    public void onSuccess(Object data) {
+
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+
+                    }
+                });
+    }
+
 
 
     private void showExitConfirmDialog(){
@@ -125,6 +169,7 @@ public class UserInfoActivity extends BaseActivity{
                 Intent intent = new Intent(UserInfoActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
+                requestLogout();
             }
         });
 

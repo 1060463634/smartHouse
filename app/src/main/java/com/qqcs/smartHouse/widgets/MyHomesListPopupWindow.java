@@ -17,11 +17,14 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.qqcs.smartHouse.R;
+import com.qqcs.smartHouse.activity.CreateHomeActivity;
 import com.qqcs.smartHouse.activity.HomeManageActivity;
 import com.qqcs.smartHouse.adapter.HomeManageAdapter;
 import com.qqcs.smartHouse.adapter.HomesPopAdapter;
 import com.qqcs.smartHouse.application.Constants;
 import com.qqcs.smartHouse.application.SP_Constants;
+import com.qqcs.smartHouse.fragment.HomeFragment;
+import com.qqcs.smartHouse.models.EventBusBean;
 import com.qqcs.smartHouse.models.FamilyInfoBean;
 import com.qqcs.smartHouse.network.CommonJsonList;
 import com.qqcs.smartHouse.network.MyStringCallback;
@@ -31,6 +34,7 @@ import com.qqcs.smartHouse.utils.SharePreferenceUtil;
 import com.qqcs.smartHouse.utils.ToastUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,6 +48,7 @@ public class MyHomesListPopupWindow {
 
     private PopupWindow popupWindow;
     private Context mContext;
+    private HomeFragment mFragment;
     private View view;
     private ListView mListView;
     private HomesPopAdapter mAdapter;
@@ -57,8 +62,9 @@ public class MyHomesListPopupWindow {
      * @param context
      * @param view 在这个控件下面
      */
-    public MyHomesListPopupWindow(Context context, View view) {
+    public MyHomesListPopupWindow(Context context,HomeFragment fragment, View view) {
         this.mContext = context;
+        this.mFragment = fragment;
         this.view = view;
         initPopupWindow();
     }
@@ -147,7 +153,10 @@ public class MyHomesListPopupWindow {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int p, long id) {
-
+                popupWindow.dismiss();
+                SharePreferenceUtil.put(mContext,
+                        SP_Constants.CURRENT_FAMILY_ID, mListDatas.get(p).getFamilyId());
+                EventBus.getDefault().post(new EventBusBean(EventBusBean.FAMILY_ID_CHANGED));
 
             }
         });

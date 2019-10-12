@@ -28,4 +28,10 @@
     <color name="line_gray">#d8d8d8</color>
     <color name="system_bar_bg">#ffffff</color>
     <color name="text_hint_blue">#A9D7FF</color>
+
+    <color name="viewfinder_mask">#70000000</color>
+    <color name="result_view">#70000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+
+
 </resources>

@@ -6,6 +6,8 @@
     <dimen name="text_size_common_note">12dp</dimen> <!-- 注释最小字体 -->
 
     <dimen name="edit_common_height">45dp</dimen>
+    <dimen name="air_switch_padding">20dp</dimen>
+    <dimen name="air_switch_text_size">14dp</dimen>
 
 
 

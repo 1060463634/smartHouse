@@ -9,6 +9,7 @@ import com.zhy.http.okhttp.cookie.store.PersistentCookieStore;
 
 import java.io.File;
 
+import cn.jpush.android.api.JPushInterface;
 import okhttp3.OkHttpClient;
 
 
@@ -18,16 +19,21 @@ import okhttp3.OkHttpClient;
  */
 public class MyApplication extends Application {
 
-
+    private static MyApplication instance;
     @Override
     public void onCreate() {
         super.onCreate();
+
+        instance = this;
 
         ImageLoaderUtil.getInstance().initImageLoader(getApplicationContext());
 
         initOkHttp();
 
         creatDir();
+
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
     }
 
     private void creatDir(){
@@ -52,4 +58,9 @@ public class MyApplication extends Application {
         OkHttpUtils.initClient(okHttpClient);
 
     }
+
+    public static MyApplication getApplication() {
+        return instance;
+    }
+
 }

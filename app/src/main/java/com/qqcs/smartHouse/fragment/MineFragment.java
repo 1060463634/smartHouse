@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.qqcs.smartHouse.R;
@@ -22,6 +23,7 @@ import com.qqcs.smartHouse.activity.WelcomeHomeActivity;
 import com.qqcs.smartHouse.application.Constants;
 import com.qqcs.smartHouse.application.SP_Constants;
 import com.qqcs.smartHouse.models.CurUserInfoBean;
+import com.qqcs.smartHouse.models.EventBusBean;
 import com.qqcs.smartHouse.models.FamilyInfoBean;
 import com.qqcs.smartHouse.network.MyStringCallback;
 import com.qqcs.smartHouse.utils.CommonUtil;
@@ -31,6 +33,9 @@ import com.qqcs.smartHouse.utils.SharePreferenceUtil;
 import com.qqcs.smartHouse.utils.ToastUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -78,6 +83,7 @@ public class MineFragment extends BaseFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
+        EventBus.getDefault().register(this);
     }
 
 
@@ -107,7 +113,6 @@ public class MineFragment extends BaseFragment{
         mMemberLayout.setOnClickListener(this);
         mVersionTv.setText(CommonUtil.getVersionName(mContext));
         getCurrentInfo();
-
 
     }
 
@@ -204,12 +209,25 @@ public class MineFragment extends BaseFragment{
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(EventBusBean event){
+        switch (event.getType()){
+
+            case EventBusBean.FAMILY_ID_CHANGED:
+                getCurrentInfo();
+                break;
+
+
+        }
+
+    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         //解除绑定
         bind.unbind();
+        EventBus.getDefault().unregister(this);
     }
 
 

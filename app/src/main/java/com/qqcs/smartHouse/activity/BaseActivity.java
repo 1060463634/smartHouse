@@ -39,7 +39,8 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             if(this instanceof LoginActivity || this instanceof WelcomeHomeActivity
-                    || this instanceof MainActivity){
+                    || this instanceof MainActivity || this instanceof TvControlActivity
+                    || this instanceof AirConditionControlActivity){
                 View decorView = window.getDecorView();
                 decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE);

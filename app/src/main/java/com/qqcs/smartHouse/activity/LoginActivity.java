@@ -175,14 +175,16 @@ public class LoginActivity extends BaseActivity{
             return;
         }
 
+        String registrationId = (String) SharePreferenceUtil.get(this,
+                SP_Constants.REGISTRATION_ID,"");
+
         String timestamp = System.currentTimeMillis() + "";
         JSONObject object = CommonUtil.getRequstJson(getApplicationContext());
         JSONObject dataObject = new JSONObject();
         try {
             dataObject.put("phone", phone);
             dataObject.put("code", verCode);
-            // todo 极光推送
-            dataObject.put("registrationId", "");
+            dataObject.put("registrationId", registrationId);
             dataObject.put("deviceToken", "");
             dataObject.put("timestamp", timestamp);
 

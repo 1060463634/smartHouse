@@ -102,6 +102,8 @@ public class WelcomeHomeActivity extends BaseActivity{
                 startActivityForResult(intent,REQUEST_CREATE_FAMILY);
                 break;
             case R.id.enter_home_btn:
+                intent = new Intent(this, ScanQRCodeActivity.class);
+                startActivity(intent);
                 break;
             case R.id.back_img:
                 finish();

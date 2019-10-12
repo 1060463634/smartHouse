@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="444dp"
+        android:background="@drawable/shape_login_btn">
+
+        <View
+            android:id="@+id/view_label"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_top"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_below="@id/view_label">
+
+            <ImageView
+                android:id="@+id/back_img"
+                android:layout_width="43dp"
+                android:layout_height="match_parent"
+                android:onClick="onBack"
+                android:scaleType="center"
+                android:src="@drawable/arrow_left_white" />
+
+            <TextView
+                android:id="@+id/tv_activity_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/wave_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/ic_wave" />
+
+        <RelativeLayout
+            android:id="@+id/control_label"
+            android:layout_width="243dp"
+            android:layout_height="243dp"
+            android:layout_above="@+id/wave_label"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ic_bgcircle">
+
+            <ImageView
+                android:id="@+id/tv_ok_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_ok_ir" />
+
+            <ImageView
+                android:id="@+id/tv_up_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_up_arrow" />
+
+            <ImageView
+                android:id="@+id/tv_down_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="15dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_down_arrow" />
+
+            <ImageView
+                android:id="@+id/tv_left_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_left_arrow" />
+
+            <ImageView
+                android:id="@+id/tv_right_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_right_arrow" />
+
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/tv_open_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_shot_down_ir"
+            android:layout_above="@+id/control_label"
+            android:layout_marginLeft="50dp" />
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/volume_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_volume_ir"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="80dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/volume_add_img"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/volume_delete_img"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/channel_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_channel_ir"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="80dp"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/channel_add_img"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:id="@+id/channel_delete_img"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/tv_home_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_home_ir"
+            android:layout_below="@+id/volume_img"
+            android:layout_marginTop="34dp"
+            android:layout_marginLeft="80dp"/>
+
+        <ImageView
+            android:id="@+id/tv_back_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back_ir"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/channel_img"
+            android:layout_marginTop="34dp"
+            android:layout_marginRight="80dp"/>
+
+
+    </RelativeLayout>
+
+</LinearLayout>

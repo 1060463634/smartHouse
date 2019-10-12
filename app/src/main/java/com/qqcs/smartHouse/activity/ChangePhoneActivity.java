@@ -44,6 +44,9 @@ public class ChangePhoneActivity extends BaseActivity{
     @BindView(R.id.new_phone_edt)
     EditText mNewPhoneEdt;
 
+    @BindView(R.id.confirm_phone_edt)
+    EditText mConfirmPhoneEdt;
+
     @BindView(R.id.ver_code_btn)
     Button mVerCodeBtn;
 
@@ -123,7 +126,7 @@ public class ChangePhoneActivity extends BaseActivity{
                 });
     }
 
-    private void changePhone(String code,String newPhone){
+    private void changePhone(String code,String newPhone,String confirmPhone){
 
         if (TextUtils.isEmpty(code)) {
             ToastUtil.showToast(this, "请输入短信验证码");
@@ -137,6 +140,15 @@ public class ChangePhoneActivity extends BaseActivity{
             ToastUtil.showToast(this, "新手机号格式不正确");
             return;
         }
+        if (TextUtils.isEmpty(confirmPhone)) {
+            ToastUtil.showToast(this, "请再次输入新手机号");
+            return;
+        }
+        if (!newPhone.equalsIgnoreCase(confirmPhone)) {
+            ToastUtil.showToast(this, "两次输入的手机号不一致");
+            return;
+        }
+
 
         String accessToken = (String) SharePreferenceUtil.
                 get(this, SP_Constants.ACCESS_TOKEN,"");
@@ -191,7 +203,7 @@ public class ChangePhoneActivity extends BaseActivity{
         switch (v.getId()){
             case R.id.save_btn:
                 changePhone(mVerCodeEdt.getText().toString(),
-                        mNewPhoneEdt.getText().toString());
+                        mNewPhoneEdt.getText().toString(),mConfirmPhoneEdt.getText().toString());
                 break;
             case R.id.ver_code_btn:
                 sendCode(mOldPhoneTv.getText().toString());

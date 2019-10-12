@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg_white"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <include layout="@layout/layout_title_bar_save"/>
+    <include layout="@layout/layout_line_gray"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_marginTop="30dp">
+
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="房间名称："
+            android:textSize="18dp"
+            android:textColor="@color/text_blue"
+            android:layout_centerVertical="true"/>
+
+        <EditText
+            android:id="@+id/room_name_edt"
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@+id/label"
+            android:layout_marginLeft="10dp"
+            android:layout_height="@dimen/edit_common_height"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent"
+            android:hint="请输入房间名称"
+            android:singleLine="true"
+            android:textColor="@color/text_blue"
+            android:textColorHint="@color/text_hint_blue"
+            android:textSize="18dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ff67b9ff"
+            android:layout_toRightOf="@+id/label"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/room_name_edt"
+            />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:text="例如：卧室，厨房，客厅..."
+        android:textSize="12dp"
+        android:textColor="@color/text_black"/>
+</LinearLayout>

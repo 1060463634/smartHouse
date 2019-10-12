@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/transparent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/shape_dialog_select_picture"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/qiangfeng_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center" >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_wind_qiangfeng"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="强风"
+                android:textColor="@color/text_black"
+                android:textSize="16dp" />
+        </LinearLayout>
+        <include layout="@layout/layout_line_gray"/>
+        <LinearLayout
+            android:id="@+id/ruofeng_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center" >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_wind_ruofeng"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="弱风"
+                android:textColor="@color/text_black"
+                android:textSize="16dp" />
+        </LinearLayout>
+        <include layout="@layout/layout_line_gray"/>
+        <LinearLayout
+            android:id="@+id/weifeng_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center" >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_wind_weifeng"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="微风"
+                android:textColor="@color/text_black"
+                android:textSize="16dp" />
+        </LinearLayout>
+        <include layout="@layout/layout_line_gray"/>
+        <LinearLayout
+            android:id="@+id/auto_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center" >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_wind_auto"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="自动"
+                android:textColor="@color/text_black"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cancel_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/shape_dialog_select_picture">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="取消"
+                android:textColor="#ff007aff"
+                android:textSize="16dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>
