@@ -5,7 +5,7 @@ android {
     buildToolsVersion '26.0.2' //你构建工具的版本号,设置到最高
     defaultConfig {
         applicationId "com.qqcs.smartHouse"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 24
 
 
@@ -16,9 +16,9 @@ android {
         }
 
         manifestPlaceholders = [
-                JPUSH_PKGNAME : applicationId,
+                JPUSH_PKGNAME: applicationId,
                 JPUSH_APPKEY : "d7503bc19d92fdf7ccc26c1a", //JPush 上注册的包名对应的 Appkey.
-                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+                JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
         ]
 
     }
@@ -37,7 +37,6 @@ dependencies {
     //网络
     implementation files('libs/okhttputils-2_6_2.jar')
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    implementation files('libs/gson-2.2.4.jar')
     //图片
     implementation files('libs/universal-image-loader-1.9.5.jar')
     //下拉刷新
@@ -54,6 +53,10 @@ dependencies {
     implementation files('libs/zxing.jar')
 
     //极光推送
-    implementation 'cn.jiguang.sdk:jpush:3.3.6'  // 此处以JPush 3.3.6 版本为例。
-    implementation 'cn.jiguang.sdk:jcore:2.1.6'  // 此处以JCore 2.1.6 版本为例。
+    implementation 'cn.jiguang.sdk:jpush:3.3.6'
+    implementation 'cn.jiguang.sdk:jcore:2.1.6'
+
+    //极光推送
+    implementation 'com.hikvision.ezviz:ezviz-sdk:4.8.8'
+    implementation project(path: ':yingshi')
 }

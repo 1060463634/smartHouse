@@ -8,6 +8,8 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ezviz.stream.EZStreamClientManager;
 import com.qqcs.smartHouse.R;
 import com.qqcs.smartHouse.activity.AirConditionControlActivity;
 import com.qqcs.smartHouse.activity.TvControlActivity;
@@ -26,18 +30,33 @@ import com.qqcs.smartHouse.models.DeviceBean;
 import com.qqcs.smartHouse.models.RoomBean;
 import com.qqcs.smartHouse.network.MyStringCallback;
 import com.qqcs.smartHouse.utils.CommonUtil;
+import com.qqcs.smartHouse.utils.EZUtils;
+import com.qqcs.smartHouse.utils.LogUtil;
 import com.qqcs.smartHouse.utils.MD5Utils;
 import com.qqcs.smartHouse.utils.SharePreferenceUtil;
 import com.qqcs.smartHouse.utils.ToastUtil;
+import com.videogo.constant.IntentConsts;
+import com.videogo.exception.BaseException;
+import com.videogo.openapi.EZOpenSDK;
+import com.videogo.openapi.EzvizAPI;
+import com.videogo.openapi.bean.EZCameraInfo;
+import com.videogo.openapi.bean.EZDeviceInfo;
+import com.videogo.ui.realplay.EZRealPlayActivity;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import ezviz.ezopensdk.demo.SdkInitParams;
+import ezviz.ezopensdk.demo.SdkInitTool;
 import okhttp3.MediaType;
+
+import static com.ezviz.stream.EZError.EZ_OK;
+import static com.qqcs.smartHouse.application.MyApplication.getApplication;
 
 
 public class DeviceListAdapter extends BaseAdapter {
@@ -146,11 +165,99 @@ public class DeviceListAdapter extends BaseAdapter {
 
     }
 
+
+    String TAG = "wang";
+    /**
+     * 通过调用服务接口判断AppKey和AccessToken且有效
+     * @return 是否依旧有效
+     */
+    private boolean checkAppKeyAndAccessToken() {
+        boolean isValid = false;
+        try {
+            EzvizAPI.getInstance().getUserName();
+            isValid = true;
+        } catch (BaseException e) {
+            e.printStackTrace();
+            Log.e(TAG, "Error code is " + e.getErrorCode());
+            int errCode = e.getErrorCode();
+            String errMsg;
+            switch (errCode){
+                case 400031:
+                    errMsg = "无网络连接";
+                    break;
+                default:
+                    errMsg = "无效AppKey或AccessToken，请重新登录";
+                    break;
+            }
+            ToastUtil.showToast(mContext,errMsg);
+        }
+        return isValid;
+    }
+
+
+    private void EZRealPlay() throws BaseException {
+        List<EZDeviceInfo> result = null;
+        result = EZOpenSDK.getInstance().getDeviceList(0, 20);
+
+        final EZDeviceInfo deviceInfo = result.get(0);
+
+        if (deviceInfo.getCameraNum() <= 0 || deviceInfo.getCameraInfoList() == null || deviceInfo.getCameraInfoList().size() <= 0) {
+            LogUtil.d(TAG, "cameralist is null or cameralist size is 0");
+            return;
+        }
+        if (deviceInfo.getCameraNum() == 1 && deviceInfo.getCameraInfoList() != null && deviceInfo.getCameraInfoList().size() == 1) {
+            LogUtil.d(TAG, "cameralist have one camera");
+            final EZCameraInfo cameraInfo = EZUtils.getCameraInfoFromDevice(deviceInfo, 0);
+            if (cameraInfo == null) {
+                return;
+            }
+            int ret = EZStreamClientManager.create(getApplication().getApplicationContext()).clearTokens();
+            if (EZ_OK == ret){
+                Log.i(TAG, "clearTokens: ok");
+            }else{
+                Log.e(TAG, "clearTokens: fail");
+            }
+            Intent intent = new Intent(mContext, EZRealPlayActivity.class);
+            intent.putExtra(IntentConsts.EXTRA_CAMERA_INFO, cameraInfo);
+            intent.putExtra(IntentConsts.EXTRA_DEVICE_INFO, deviceInfo);
+            mContext.startActivity(intent);
+            return;
+        }
+
+
+    }
+
+
+
+    private void playCamera(){
+        EZOpenSDK.getInstance().setAccessToken("at.bwef8xdq7yhh6qzf1q7qslyedzmh38cx-8380qes95g-1v2rxv7-iv1vy8kmq");
+
+        if(EzvizAPI.getInstance().isLogin()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (checkAppKeyAndAccessToken()){
+
+                        try {
+                            EZRealPlay();
+                        } catch (BaseException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            }).start();
+        }
+
+
+
+    }
+
     private void controlDevice(DeviceBean bean){
         Intent intent;
         switch (bean.getTypeCode()) {
             case "Camera":
-
+                playCamera();
                 break;
             case "Doorbell":
 
