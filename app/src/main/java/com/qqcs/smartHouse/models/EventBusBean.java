@@ -4,11 +4,11 @@ public class EventBusBean {
     //
     public static final String FAMILY_ID_CHANGED = "familyidChanged";
     //
-    public static final String REFRESH_HOME = "refreshHome";
+    public static final String REFRESH_HOME = "1";
     //
-    public static final String REFRESH_PROPT = "refreshPropt";
+    public static final String REFRESH_PROPT = "2";
     //
-    public static final String REFRESH_HOME_AND_PROPT = "refreshHomeAndProp";
+    public static final String REFRESH_HOME_AND_PROPT = "3";
 
 
 

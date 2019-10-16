@@ -20,10 +20,23 @@ import com.qqcs.smartHouse.activity.CreateHomeActivity;
 import com.qqcs.smartHouse.activity.LoginActivity;
 import com.qqcs.smartHouse.activity.MainActivity;
 import com.qqcs.smartHouse.activity.WelcomeHomeActivity;
+import com.qqcs.smartHouse.application.Constants;
+import com.qqcs.smartHouse.application.SP_Constants;
+import com.qqcs.smartHouse.models.DeviceBean;
+import com.qqcs.smartHouse.network.MyStringCallback;
+import com.qqcs.smartHouse.utils.CommonUtil;
+import com.qqcs.smartHouse.utils.MD5Utils;
+import com.qqcs.smartHouse.utils.SharePreferenceUtil;
+import com.qqcs.smartHouse.utils.ToastUtil;
+import com.zhy.http.okhttp.OkHttpUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import okhttp3.MediaType;
 
 
 /**
@@ -83,47 +96,91 @@ public class ScenceFragment extends BaseFragment {
 
     }
 
-    @Override
-    public void onMultiClick(View v) {
+    private void showCustomToast(String type){
+        if(type.equalsIgnoreCase("1")){
+
+
+        }else if(type.equalsIgnoreCase("1")){
+
+        }
+
         Toast toast2;
         View view;
+        toast2 = new Toast(mContext);
+        view = LayoutInflater.from(mContext).inflate(R.layout.toast_commom, null);
+        ((TextView)view.findViewById(R.id.text)).setText("开启晚安模式");
+        toast2.setView(view);
+        toast2.setGravity(Gravity.CENTER, 0, 0);
+        toast2.show();
+    }
+
+    private void openSence(final String type) {
+
+        String accessToken = (String) SharePreferenceUtil.
+                get(mContext, SP_Constants.ACCESS_TOKEN,"");
+        String familyId = (String) SharePreferenceUtil.
+                get(mContext, SP_Constants.CURRENT_FAMILY_ID,"");
+
+        String timestamp = System.currentTimeMillis() + "";
+        JSONObject object = CommonUtil.getRequstJson(mContext);
+        JSONObject dataObject = new JSONObject();
+
+        try {
+            dataObject.put("type", type);
+            dataObject.put("familyId", familyId);
+            dataObject.put("timestamp", timestamp);
+
+            object.put("data", dataObject);
+            object.put("sign", MD5Utils.md5s(type + familyId + timestamp));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkHttpUtils
+                .postString()
+                .tag(this)
+                .url(Constants.HTTP_SITUATION_DOACTION)
+                .addHeader("access-token",accessToken)
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+                .content(object.toString())
+                .build()
+                .execute(new MyStringCallback<Object>(mContext,
+                        Object.class, true, false) {
+                    @Override
+                    public void onSuccess(Object data) {
+                        ToastUtil.showToast(mContext, "执行成功");
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        ToastUtil.showToast(mContext, message);
+                    }
+                });
+    }
+
+
+    @Override
+    public void onMultiClick(View v) {
+
         switch (v.getId()) {
             case R.id.night_scene_img:
+                openSence("2");
 
-                toast2 = new Toast(mContext);
-                view = LayoutInflater.from(mContext).inflate(R.layout.toast_commom, null);
-                ((TextView)view.findViewById(R.id.text)).setText("开启晚安模式");
-                toast2.setView(view);
-                toast2.setGravity(Gravity.CENTER, 0, 0);
-                toast2.show();
                 break;
 
             case R.id.morning_scene_img:
+                openSence("1");
 
-                toast2 = new Toast(mContext);
-                view = LayoutInflater.from(mContext).inflate(R.layout.toast_commom, null);
-                ((TextView)view.findViewById(R.id.text)).setText("开启早安模式");
-                toast2.setView(view);
-                toast2.setGravity(Gravity.CENTER, 0, 0);
-                toast2.show();
                 break;
 
             case R.id.leave_scene_img:
-                toast2 = new Toast(mContext);
-                view = LayoutInflater.from(mContext).inflate(R.layout.toast_commom, null);
-                ((TextView)view.findViewById(R.id.text)).setText("开启外出模式");
-                toast2.setView(view);
-                toast2.setGravity(Gravity.CENTER, 0, 0);
-                toast2.show();
+                openSence("2");
+
                 break;
 
             case R.id.back_scene_img:
-                toast2 = new Toast(mContext);
-                view = LayoutInflater.from(mContext).inflate(R.layout.toast_commom, null);
-                ((TextView)view.findViewById(R.id.text)).setText("开启回家模式");
-                toast2.setView(view);
-                toast2.setGravity(Gravity.CENTER, 0, 0);
-                toast2.show();
+                openSence("1");
                 break;
         }
     }

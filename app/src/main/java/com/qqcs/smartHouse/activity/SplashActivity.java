@@ -81,12 +81,15 @@ public class SplashActivity extends BaseActivity {
                     || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                     || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
+                    || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                 Manifest.permission.CAMERA,
                                 Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.READ_PHONE_STATE}, 1);
+                                Manifest.permission.READ_PHONE_STATE,
+                                Manifest.permission.RECORD_AUDIO}, 1);
             } else {
                 timeLogin();
             }

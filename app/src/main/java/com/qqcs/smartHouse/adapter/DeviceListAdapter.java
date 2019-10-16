@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,18 +16,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ezviz.stream.EZStreamClientManager;
+import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
 import com.qqcs.smartHouse.R;
 import com.qqcs.smartHouse.activity.AirConditionControlActivity;
+import com.qqcs.smartHouse.activity.DeviceEditActivity;
+import com.qqcs.smartHouse.activity.DoorLockActivity;
+import com.qqcs.smartHouse.activity.OpenWindowActivity;
 import com.qqcs.smartHouse.activity.TvControlActivity;
 import com.qqcs.smartHouse.application.Constants;
 import com.qqcs.smartHouse.application.OnMultiClickListener;
 import com.qqcs.smartHouse.application.SP_Constants;
+import com.qqcs.smartHouse.fragment.HomeFragment;
+import com.qqcs.smartHouse.models.AccessTokenBean;
 import com.qqcs.smartHouse.models.DeviceBean;
 import com.qqcs.smartHouse.models.RoomBean;
 import com.qqcs.smartHouse.network.MyStringCallback;
@@ -41,34 +50,38 @@ import com.videogo.openapi.EZOpenSDK;
 import com.videogo.openapi.EzvizAPI;
 import com.videogo.openapi.bean.EZCameraInfo;
 import com.videogo.openapi.bean.EZDeviceInfo;
+import com.videogo.remoteplayback.list.EZPlayBackListActivity;
+import com.videogo.remoteplayback.list.RemoteListContant;
+import com.videogo.ui.cameralist.EZCameraListActivity;
+import com.videogo.ui.cameralist.SelectCameraDialog;
 import com.videogo.ui.realplay.EZRealPlayActivity;
+import com.videogo.util.DateTimeUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import ezviz.ezopensdk.demo.SdkInitParams;
-import ezviz.ezopensdk.demo.SdkInitTool;
 import okhttp3.MediaType;
 
 import static com.ezviz.stream.EZError.EZ_OK;
 import static com.qqcs.smartHouse.application.MyApplication.getApplication;
 
 
-public class DeviceListAdapter extends BaseAdapter {
+public class DeviceListAdapter extends BaseAdapter{
 
     private Context mContext;
+    private HomeFragment mFragment;
     private List<DeviceBean> mlists;
     private LayoutInflater mInflater;
     private MediaPlayer mediaPlayer;
     private static final float BEEP_VOLUME = 0.10f;
 
-    public DeviceListAdapter(Context context, List<DeviceBean> lists) {
+    public DeviceListAdapter(Context context,HomeFragment fragment, List<DeviceBean> lists) {
         mContext = context;
+        mFragment = fragment;
         mInflater = LayoutInflater.from(mContext);
         mlists = lists;
         initBeepSound();
@@ -105,6 +118,8 @@ public class DeviceListAdapter extends BaseAdapter {
             viewHolder.device_connect_img = convertView.findViewById(R.id.connect_img);
             viewHolder.device_type_img = convertView.findViewById(R.id.device_type_img);
             viewHolder.device_name_tv = convertView.findViewById(R.id.device_name_tv);
+            viewHolder.device_learn = convertView.findViewById(R.id.learn_btn);
+            viewHolder.device_edit = convertView.findViewById(R.id.edit_btn);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -116,16 +131,191 @@ public class DeviceListAdapter extends BaseAdapter {
 
         int imgId = getImgByDeviceType(bean);
         viewHolder.device_type_img.setImageResource(imgId);
-
-        viewHolder.device_layout.setOnClickListener(new OnMultiClickListener() {
-            @Override
-            public void onMultiClick(View v) {
-                controlDevice(mlists.get(position));
-            }
-        }) ;
-
+        setItemListenerByInfo(viewHolder,mlists.get(position),convertView);
 
         return convertView;
+    }
+
+    private void setItemListenerByInfo(ViewHolder viewHolder,final DeviceBean bean,View convertView){
+
+        final View finalCloseView = convertView;
+
+        switch (bean.getTypeCode()) {
+            case "Camera":
+            case "Doorbell":
+                viewHolder.device_learn.setVisibility(View.VISIBLE);
+                viewHolder.device_learn.setText("回放");
+
+                //type 1: 播放； 2：回放； 3：设置
+                viewHolder.device_layout.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+                        getAccessToken(bean.getDeviceSerial(),1,null);
+                    }
+                }) ;
+
+                viewHolder.device_learn.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+                        getAccessToken(bean.getDeviceSerial(),2,null);
+                    }
+                });
+
+                viewHolder.device_edit.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+                        getAccessToken(bean.getDeviceSerial(),3,bean);
+                        ((SwipeMenuLayout)(finalCloseView)).quickClose();// 关闭侧滑菜单
+
+                    }
+                });
+
+                break;
+            case "SwitchInfo":
+                viewHolder.device_learn.setVisibility(View.INVISIBLE);
+                viewHolder.device_layout.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+                        playBeepSoundAndVibrate();
+                        openSwitch(bean);
+                    }
+                }) ;
+                viewHolder.device_edit.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+                        Intent intent = new Intent(mContext, DeviceEditActivity.class);
+                        intent.putExtra("deviceId",bean.getDeviceId());
+                        intent.putExtra("propId",bean.getPropId());
+                        intent.putExtra("deviceName",bean.getDeviceName());
+                        intent.putExtra("roomId",mFragment.getCurrentRoomId());
+                        mContext.startActivity(intent);
+                        ((SwipeMenuLayout)(finalCloseView)).quickClose();// 关闭侧滑菜单
+
+                    }
+                });
+
+                break;
+            case "LightingControl":
+                viewHolder.device_learn.setVisibility(View.INVISIBLE);
+
+                viewHolder.device_layout.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+                        Intent intent = new Intent(mContext, OpenWindowActivity.class);
+                        intent.putExtra("deviceId",bean.getDeviceId());
+                        intent.putExtra("propId",bean.getPropId());
+                        intent.putExtra("subType",bean.getSubType());
+                        intent.putExtra("titleName",bean.getDeviceName());
+                        mContext.startActivity(intent);
+                    }
+                }) ;
+                viewHolder.device_edit.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+                        Intent intent = new Intent(mContext, DeviceEditActivity.class);
+                        intent.putExtra("deviceId",bean.getDeviceId());
+                        intent.putExtra("propId",bean.getPropId());
+                        intent.putExtra("deviceName",bean.getDeviceName());
+                        intent.putExtra("roomId",mFragment.getCurrentRoomId());
+                        mContext.startActivity(intent);
+                        ((SwipeMenuLayout)(finalCloseView)).quickClose();// 关闭侧滑菜单
+
+                    }
+                });
+
+                break;
+            case "DoorLock":
+                viewHolder.device_learn.setVisibility(View.INVISIBLE);
+                viewHolder.device_layout.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+                        Intent intent = new Intent(mContext, DoorLockActivity.class);
+                        intent.putExtra("deviceId",bean.getDeviceId());
+                        intent.putExtra("propId",bean.getPropId());
+                        intent.putExtra("titleName",bean.getDeviceName());
+                        mContext.startActivity(intent);
+                    }
+                }) ;
+                viewHolder.device_edit.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+                        Intent intent = new Intent(mContext, DeviceEditActivity.class);
+                        intent.putExtra("deviceId",bean.getDeviceId());
+                        intent.putExtra("propId",bean.getPropId());
+                        intent.putExtra("deviceName",bean.getDeviceName());
+                        intent.putExtra("roomId",mFragment.getCurrentRoomId());
+                        mContext.startActivity(intent);
+                        ((SwipeMenuLayout)(finalCloseView)).quickClose();// 关闭侧滑菜单
+
+                    }
+                });
+
+                break;
+            case "RemoteController":
+                viewHolder.device_learn.setVisibility(View.VISIBLE);
+                viewHolder.device_learn.setText("红外学习");
+
+
+                viewHolder.device_layout.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+                        if(bean.getSubType().equalsIgnoreCase("AirRemoteController")){
+                            Intent intent = new Intent(mContext, AirConditionControlActivity.class);
+                            intent.putExtra("deviceId",bean.getDeviceId());
+                            intent.putExtra("propId",bean.getPropId());
+                            intent.putExtra("commandType","F0");
+                            intent.putExtra("titleName",bean.getDeviceName());
+                            mContext.startActivity(intent);
+                        } else if(bean.getSubType().equalsIgnoreCase("TvRemoteController")){
+                            Intent intent = new Intent(mContext, TvControlActivity.class);
+                            intent.putExtra("deviceId",bean.getDeviceId());
+                            intent.putExtra("propId",bean.getPropId());
+                            intent.putExtra("commandType","F0");
+                            intent.putExtra("titleName",bean.getDeviceName());
+                            mContext.startActivity(intent);
+                        }
+                    }
+                }) ;
+
+                viewHolder.device_learn.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+                        if(bean.getSubType().equalsIgnoreCase("AirRemoteController")){
+                            Intent intent = new Intent(mContext, AirConditionControlActivity.class);
+                            intent.putExtra("deviceId",bean.getDeviceId());
+                            intent.putExtra("propId",bean.getPropId());
+                            intent.putExtra("commandType","F1");
+                            intent.putExtra("titleName",bean.getDeviceName());
+                            mContext.startActivity(intent);
+                        } else if(bean.getSubType().equalsIgnoreCase("TvRemoteController")){
+                            Intent intent = new Intent(mContext, TvControlActivity.class);
+                            intent.putExtra("deviceId",bean.getDeviceId());
+                            intent.putExtra("propId",bean.getPropId());
+                            intent.putExtra("commandType","F1");
+                            intent.putExtra("titleName",bean.getDeviceName());
+                            mContext.startActivity(intent);
+                        }
+                    }
+                });
+
+                viewHolder.device_edit.setOnClickListener(new OnMultiClickListener() {
+                    @Override
+                    public void onMultiClick(View v) {
+                        Intent intent = new Intent(mContext, DeviceEditActivity.class);
+                        intent.putExtra("deviceId",bean.getDeviceId());
+                        intent.putExtra("propId",bean.getPropId());
+                        intent.putExtra("deviceName",bean.getDeviceName());
+                        intent.putExtra("roomId",mFragment.getCurrentRoomId());
+                        mContext.startActivity(intent);
+                        ((SwipeMenuLayout)(finalCloseView)).quickClose();// 关闭侧滑菜单
+
+                    }
+                });
+
+                break;
+        }
+
+
     }
 
     private int getImgByDeviceType(DeviceBean bean){
@@ -146,7 +336,12 @@ public class DeviceListAdapter extends BaseAdapter {
                 }
                 break;
             case "LightingControl":
-                imgId = R.drawable.ic_chuanlian;
+                // subType = 2: 窗帘, 4: 推窗器
+                if(bean.getSubType().equalsIgnoreCase("2")){
+                    imgId = R.drawable.ic_chuanlian;
+                } else if(bean.getSubType().equalsIgnoreCase("4")){
+                    imgId = R.drawable.ic_window;
+                }
                 break;
             case "DoorLock":
                 imgId = R.drawable.ic_door_lock;
@@ -167,135 +362,95 @@ public class DeviceListAdapter extends BaseAdapter {
 
 
     String TAG = "wang";
-    /**
-     * 通过调用服务接口判断AppKey和AccessToken且有效
-     * @return 是否依旧有效
-     */
-    private boolean checkAppKeyAndAccessToken() {
-        boolean isValid = false;
-        try {
-            EzvizAPI.getInstance().getUserName();
-            isValid = true;
-        } catch (BaseException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Error code is " + e.getErrorCode());
-            int errCode = e.getErrorCode();
-            String errMsg;
-            switch (errCode){
-                case 400031:
-                    errMsg = "无网络连接";
-                    break;
-                default:
-                    errMsg = "无效AppKey或AccessToken，请重新登录";
-                    break;
-            }
-            ToastUtil.showToast(mContext,errMsg);
-        }
-        return isValid;
-    }
-
-
-    private void EZRealPlay() throws BaseException {
-        List<EZDeviceInfo> result = null;
-        result = EZOpenSDK.getInstance().getDeviceList(0, 20);
-
-        final EZDeviceInfo deviceInfo = result.get(0);
-
-        if (deviceInfo.getCameraNum() <= 0 || deviceInfo.getCameraInfoList() == null || deviceInfo.getCameraInfoList().size() <= 0) {
-            LogUtil.d(TAG, "cameralist is null or cameralist size is 0");
-            return;
-        }
-        if (deviceInfo.getCameraNum() == 1 && deviceInfo.getCameraInfoList() != null && deviceInfo.getCameraInfoList().size() == 1) {
-            LogUtil.d(TAG, "cameralist have one camera");
-            final EZCameraInfo cameraInfo = EZUtils.getCameraInfoFromDevice(deviceInfo, 0);
-            if (cameraInfo == null) {
-                return;
-            }
-            int ret = EZStreamClientManager.create(getApplication().getApplicationContext()).clearTokens();
-            if (EZ_OK == ret){
-                Log.i(TAG, "clearTokens: ok");
-            }else{
-                Log.e(TAG, "clearTokens: fail");
-            }
-            Intent intent = new Intent(mContext, EZRealPlayActivity.class);
-            intent.putExtra(IntentConsts.EXTRA_CAMERA_INFO, cameraInfo);
-            intent.putExtra(IntentConsts.EXTRA_DEVICE_INFO, deviceInfo);
-            mContext.startActivity(intent);
-            return;
-        }
-
-
-    }
 
 
 
-    private void playCamera(){
-        EZOpenSDK.getInstance().setAccessToken("at.bwef8xdq7yhh6qzf1q7qslyedzmh38cx-8380qes95g-1v2rxv7-iv1vy8kmq");
+    private void playCamera(String accessToken, final String deviceSerial,
+                            final int type,final DeviceBean bean){
+        EZOpenSDK.getInstance().setAccessToken(accessToken);
 
-        if(EzvizAPI.getInstance().isLogin()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    if (checkAppKeyAndAccessToken()){
+        new AsyncTask<String,Void,String>(){
 
-                        try {
-                            EZRealPlay();
-                        } catch (BaseException e) {
-                            e.printStackTrace();
-                        }
+            @Override
+            protected String doInBackground(String... strings) {
+                EZDeviceInfo deviceInfo = null;
+                try {
+                    deviceInfo = EZOpenSDK.getInstance().getDeviceInfo(deviceSerial);
+                } catch (BaseException e) {
+                    e.printStackTrace();
+                }
+
+                if (deviceInfo == null){
+                    return "没找到相应的设备";
+                }
+
+                if (deviceInfo.getCameraNum() <= 0 || deviceInfo.getCameraInfoList() == null || deviceInfo.getCameraInfoList().size() <= 0) {
+                    return "cameralist is null or cameralist size is 0";
+                }
+                if (deviceInfo.getCameraNum() != 0 && deviceInfo.getCameraInfoList() != null && deviceInfo.getCameraInfoList().size() != 0) {
+                    final EZCameraInfo cameraInfo = EZUtils.getCameraInfoFromDevice(deviceInfo, 0);
+                    if (cameraInfo == null) {
+                        return "cameraInfo is null";
+                    }
+                    int ret = EZStreamClientManager.create(getApplication().getApplicationContext()).clearTokens();
+                    if (EZ_OK == ret){
+                        Log.i(TAG, "clearTokens: ok");
+                    }else{
+                        Log.e(TAG, "clearTokens: fail");
+                    }
+
+                    if(type == 2){
+                        Intent intent = new Intent(mContext, EZPlayBackListActivity.class);
+                        intent.putExtra(RemoteListContant.QUERY_DATE_INTENT_KEY, DateTimeUtil.getNow());
+                        intent.putExtra(IntentConsts.EXTRA_CAMERA_INFO, cameraInfo);
+                        mContext.startActivity(intent);
+
+                    }else if(type == 1){
+                        Intent intent = new Intent(mContext, EZRealPlayActivity.class);
+                        intent.putExtra(IntentConsts.EXTRA_CAMERA_INFO, cameraInfo);
+                        intent.putExtra(IntentConsts.EXTRA_DEVICE_INFO, deviceInfo);
+                        mContext.startActivity(intent);
+
+                    }else if(type == 3){
+                        Intent intent = new Intent(mContext,
+                                com.qqcs.smartHouse.activity.EZDeviceSettingActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable(IntentConsts.EXTRA_DEVICE_INFO,deviceInfo);
+                        intent.putExtra("Bundle",bundle);
+
+                        intent.putExtra("deviceId",bean.getDeviceId());
+                        intent.putExtra("propId",bean.getPropId());
+                        intent.putExtra("deviceName",bean.getDeviceName());
+                        intent.putExtra("roomId",mFragment.getCurrentRoomId());
+                        mContext.startActivity(intent);
+
 
                     }
                 }
-            }).start();
-        }
+                return null;
+            }
 
-
-
-    }
-
-    private void controlDevice(DeviceBean bean){
-        Intent intent;
-        switch (bean.getTypeCode()) {
-            case "Camera":
-                playCamera();
-                break;
-            case "Doorbell":
-
-                break;
-            case "SwitchInfo":
-                playBeepSoundAndVibrate();
-                openSwitch(bean);
-                break;
-            case "LightingControl":
-
-                break;
-            case "DoorLock":
-
-                break;
-            case "RemoteController":
-                if(bean.getSubType().equalsIgnoreCase("AirRemoteController")){
-
-                    intent = new Intent(mContext, AirConditionControlActivity.class);
-                    intent.putExtra("deviceId",bean.getDeviceId());
-                    intent.putExtra("propId",bean.getPropId());
-                    mContext.startActivity(intent);
-                } else if(bean.getSubType().equalsIgnoreCase("TvRemoteController")){
-                    intent = new Intent(mContext, TvControlActivity.class);
-                    intent.putExtra("deviceId",bean.getDeviceId());
-                    intent.putExtra("propId",bean.getPropId());
-                    mContext.startActivity(intent);
+            @Override
+            protected void onPostExecute(String msg) {
+                if(!TextUtils.isEmpty(msg)){
+                    ToastUtil.showToast(mContext,msg);
                 }
+            }
 
-                break;
-        }
+
+        }.execute();
 
     }
+
+
 
     private class ViewHolder {
         RelativeLayout device_layout;
         ImageView device_connect_img;
         ImageView device_type_img;
         TextView device_name_tv;
+        Button device_learn;
+        Button device_edit;
 
     }
 
@@ -341,6 +496,47 @@ public class DeviceListAdapter extends BaseAdapter {
                     @Override
                     public void onSuccess(Object data) {
                         ToastUtil.showToast(mContext,"发送成功");
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        ToastUtil.showToast(mContext, message);
+                    }
+                });
+    }
+
+    private void getAccessToken(final String deviceSerial, final int type, final DeviceBean bean) {
+
+        String accessToken = (String) SharePreferenceUtil.
+                get(mContext, SP_Constants.ACCESS_TOKEN,"");
+
+        String timestamp = System.currentTimeMillis() + "";
+        JSONObject object = CommonUtil.getRequstJson(mContext);
+        JSONObject dataObject = new JSONObject();
+
+        try {
+            dataObject.put("timestamp", timestamp);
+            object.put("data", dataObject);
+            object.put("sign", MD5Utils.md5s(timestamp));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkHttpUtils
+                .postString()
+                .tag(this)
+                .url(Constants.HTTP_GET_ACCESSTOKEN)
+                .addHeader("access-token",accessToken)
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+                .content(object.toString())
+                .build()
+                .execute(new MyStringCallback<AccessTokenBean>(mContext,
+                        AccessTokenBean.class, true, false) {
+                    @Override
+                    public void onSuccess(AccessTokenBean data) {
+                        playCamera(data.getAccessToken(),deviceSerial,type,bean);
+
                     }
 
                     @Override

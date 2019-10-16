@@ -121,6 +121,7 @@ import java.util.TimerTask;
 import ezviz.ezopensdk.R;
 import ezviz.ezopensdk.debug.VideoFileUtil;
 import ezviz.ezopensdk.demo.DemoConfig;
+import ezviz.ezopensdk.demo.SpTool;
 
 import static com.videogo.openapi.EZConstants.MSG_GOT_STREAM_TYPE;
 import static com.videogo.openapi.EZConstants.MSG_VIDEO_SIZE_CHANGED;
@@ -299,7 +300,7 @@ public class EZRealPlayActivity extends RootActivity implements OnClickListener,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        SpTool.init(getApplicationContext());
         initData();
         initView();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -1242,62 +1243,42 @@ public class EZRealPlayActivity extends RootActivity implements OnClickListener,
      */
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            /*case R.id.realplay_play_btn:
-            case R.id.realplay_full_play_btn:
-            case R.id.realplay_play_iv:
-                if (mStatus != RealPlayStatus.STATUS_STOP) {
-                    stopRealPlay();
-                    setRealPlayStopUI();
-                } else {
-                    startRealPlay();
-                }
-                break;
-            case R.id.realplay_previously_btn:
-            case R.id.realplay_previously_btn2:
-            case R.id.realplay_full_previously_btn:
-                onCapturePicBtnClick();
-                break;
-            case R.id.realplay_capture_rl:
-                onCaptureRlClick();
-                break;
-            case R.id.realplay_video_btn:
-            case R.id.realplay_video_start_btn:
-            case R.id.realplay_video_btn2:
-            case R.id.realplay_video_start_btn2:
-            case R.id.realplay_full_video_btn:
-            case R.id.realplay_full_video_start_btn:
-                onRecordBtnClick();
-                break;
-            case R.id.realplay_talk_btn:
-            case R.id.realplay_talk_btn2:
-            case R.id.realplay_full_talk_btn:
-                startVoiceTalk();
-                break;
+        int id = view.getId();
 
-            case R.id.realplay_quality_btn:
-                openQualityPopupWindow(mRealPlayQualityBtn);
-                break;
-            case R.id.realplay_ptz_btn:
-            case R.id.realplay_ptz_btn2:
-                openPtzPopupWindow(mRealPlayPlayRl);
-                break;
-            case R.id.realplay_full_ptz_btn:
-                setFullPtzStartUI(true);
-                break;
-            case R.id.realplay_full_ptz_anim_btn:
-                setFullPtzStopUI(true);
-                break;
-            case R.id.realplay_sound_btn:
-            case R.id.realplay_full_sound_btn:
-                onSoundBtnClick();
-                break;
-            case R.id.realplay_full_talk_anim_btn:
-                closeTalkPopupWindow(true, true);
-                break;
-            default:
-                break;*/
+        if(id == R.id.realplay_play_btn || id == R.id.realplay_full_play_btn || id == R.id.realplay_play_iv){
+            if (mStatus != RealPlayStatus.STATUS_STOP) {
+                stopRealPlay();
+                setRealPlayStopUI();
+            } else {
+                startRealPlay();
+            }
+
+        }else if(id == R.id.realplay_previously_btn || id == R.id.realplay_previously_btn2 || id ==  R.id.realplay_full_previously_btn){
+            onCapturePicBtnClick();
+        } else if(id == R.id.realplay_capture_rl){
+            onCaptureRlClick();
+        }else if(id == R.id.realplay_video_btn || id == R.id.realplay_video_start_btn
+                || id == R.id.realplay_video_btn2 || id == R.id.realplay_video_start_btn2
+                || id == R.id.realplay_full_video_btn || id == R.id.realplay_full_video_start_btn){
+            onRecordBtnClick();
+
+        } else if(id == R.id.realplay_talk_btn || id == R.id.realplay_talk_btn2
+                || id == R.id.realplay_full_talk_btn ){
+            startVoiceTalk();
+        } else if(id == R.id.realplay_quality_btn){
+            openQualityPopupWindow(mRealPlayQualityBtn);
+        } else if(id == R.id.realplay_ptz_btn || id == R.id.realplay_ptz_btn2){
+            openPtzPopupWindow(mRealPlayPlayRl);
+        } else if(id == R.id.realplay_full_ptz_btn){
+            setFullPtzStartUI(true);
+        } else if(id == R.id.realplay_full_ptz_anim_btn){
+            setFullPtzStopUI(true);
+        } else if(id == R.id.realplay_sound_btn || id == R.id.realplay_full_sound_btn){
+            onSoundBtnClick();
+        } else if(id == R.id.realplay_full_talk_anim_btn){
+            closeTalkPopupWindow(true, true);
         }
+
     }
 
     private void setFullPtzStartUI(boolean startAnim) {
@@ -1480,31 +1461,25 @@ public class EZRealPlayActivity extends RootActivity implements OnClickListener,
     private OnClickListener mOnPopWndClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                /*case R.id.quality_super_hd_btn:
-                    setQualityMode(EZVideoLevel.VIDEO_LEVEL_SUPERCLEAR);
-                    break;
-                case R.id.quality_hd_btn:
-                    setQualityMode(EZVideoLevel.VIDEO_LEVEL_HD);
-                    break;
-                case R.id.quality_balanced_btn:
-                    setQualityMode(EZVideoLevel.VIDEO_LEVEL_BALANCED);
-                    break;
-                case R.id.quality_flunet_btn:
-                    setQualityMode(EZVideoLevel.VIDEO_LEVEL_FLUNET);
-                    break;
-                case R.id.ptz_close_btn:
-                    closePtzPopupWindow();
-                    break;
-                case R.id.ptz_flip_btn:
-                    //                    setPtzFlip();
-                    break;
-                case R.id.talkback_close_btn:
-                    closeTalkPopupWindow(true, false);
-                    break;
-                default:
-                    break;*/
+            int id = v.getId();
+            if(id == R.id.quality_super_hd_btn){
+                setQualityMode(EZVideoLevel.VIDEO_LEVEL_SUPERCLEAR);
+            }else if(id == R.id.quality_hd_btn){
+                setQualityMode(EZVideoLevel.VIDEO_LEVEL_HD);
+            }else if(id == R.id.quality_balanced_btn){
+                setQualityMode(EZVideoLevel.VIDEO_LEVEL_BALANCED);
+            }else if(id == R.id.quality_flunet_btn){
+                setQualityMode(EZVideoLevel.VIDEO_LEVEL_FLUNET);
+            }else if(id == R.id.ptz_close_btn){
+                closePtzPopupWindow();
+            }else if(id == R.id.ptz_flip_btn){
+                //                    setPtzFlip();
+            }else if(id == R.id.talkback_close_btn){
+                closeTalkPopupWindow(true, false);
             }
+
+
+
         }
     };
 
@@ -1531,65 +1506,51 @@ public class EZRealPlayActivity extends RootActivity implements OnClickListener,
             boolean ptz_result = false;
             int action = motionevent.getAction();
             final int speed = EZConstants.PTZ_SPEED_DEFAULT;
+
             switch (action) {
-                /*case MotionEvent.ACTION_DOWN:
-                    switch (view.getId()) {
-                        case R.id.talkback_control_btn:
-                            mTalkRingView.setVisibility(View.VISIBLE);
-                            mEZPlayer.setVoiceTalkStatus(true);
-                            break;
-                        case R.id.ptz_top_btn:
-                            mPtzControlLy.setBackgroundResource(R.drawable.ptz_up_sel);
-                            setPtzDirectionIv(RealPlayStatus.PTZ_UP);
-                            ptzOption(EZPTZCommand.EZPTZCommandUp, EZPTZAction.EZPTZActionSTART);
-                            break;
-                        case R.id.ptz_bottom_btn:
-                            mPtzControlLy.setBackgroundResource(R.drawable.ptz_bottom_sel);
-                            setPtzDirectionIv(RealPlayStatus.PTZ_DOWN);
-                            ptzOption(EZPTZCommand.EZPTZCommandDown, EZPTZAction.EZPTZActionSTART);
-                            break;
-                        case R.id.ptz_left_btn:
-                            mPtzControlLy.setBackgroundResource(R.drawable.ptz_left_sel);
-                            setPtzDirectionIv(RealPlayStatus.PTZ_LEFT);
-                            ptzOption(EZPTZCommand.EZPTZCommandLeft, EZPTZAction.EZPTZActionSTART);
-                            break;
-                        case R.id.ptz_right_btn:
-                            mPtzControlLy.setBackgroundResource(R.drawable.ptz_right_sel);
-                            setPtzDirectionIv(RealPlayStatus.PTZ_RIGHT);
-                            ptzOption(EZPTZCommand.EZPTZCommandRight, EZPTZAction.EZPTZActionSTART);
-                            break;
-                        default:
-                            break;
+                case MotionEvent.ACTION_DOWN:
+                    if(view.getId() == R.id.talkback_control_btn){
+                        mTalkRingView.setVisibility(View.VISIBLE);
+                        mEZPlayer.setVoiceTalkStatus(true);
+                    }else if(view.getId() == R.id.ptz_top_btn){
+                        mPtzControlLy.setBackgroundResource(R.drawable.ptz_up_sel);
+                        setPtzDirectionIv(RealPlayStatus.PTZ_UP);
+                        ptzOption(EZPTZCommand.EZPTZCommandUp, EZPTZAction.EZPTZActionSTART);
+                    }else if(view.getId() == R.id.ptz_bottom_btn){
+                        mPtzControlLy.setBackgroundResource(R.drawable.ptz_bottom_sel);
+                        setPtzDirectionIv(RealPlayStatus.PTZ_DOWN);
+                        ptzOption(EZPTZCommand.EZPTZCommandDown, EZPTZAction.EZPTZActionSTART);
+                    }else if(view.getId() == R.id.ptz_left_btn){
+                        mPtzControlLy.setBackgroundResource(R.drawable.ptz_left_sel);
+                        setPtzDirectionIv(RealPlayStatus.PTZ_LEFT);
+                        ptzOption(EZPTZCommand.EZPTZCommandLeft, EZPTZAction.EZPTZActionSTART);
+                    }else if(view.getId() == R.id.ptz_right_btn){
+                        mPtzControlLy.setBackgroundResource(R.drawable.ptz_right_sel);
+                        setPtzDirectionIv(RealPlayStatus.PTZ_RIGHT);
+                        ptzOption(EZPTZCommand.EZPTZCommandRight, EZPTZAction.EZPTZActionSTART);
                     }
+
                     break;
+
                 case MotionEvent.ACTION_UP:
-                    switch (view.getId()) {
-                        case R.id.talkback_control_btn:
-                            mEZPlayer.setVoiceTalkStatus(false);
-                            mTalkRingView.setVisibility(View.GONE);
-                            break;
-                        case R.id.ptz_top_btn:
-                            mPtzControlLy.setBackgroundResource(R.drawable.ptz_bg);
-                            ptzOption(EZPTZCommand.EZPTZCommandUp, EZPTZAction.EZPTZActionSTOP);
-                            break;
-                        case R.id.ptz_bottom_btn:
-                            mPtzControlLy.setBackgroundResource(R.drawable.ptz_bg);
-                            ptzOption(EZPTZCommand.EZPTZCommandDown, EZPTZAction.EZPTZActionSTOP);
-                            break;
-                        case R.id.ptz_left_btn:
-                            mPtzControlLy.setBackgroundResource(R.drawable.ptz_bg);
-                            ptzOption(EZPTZCommand.EZPTZCommandLeft, EZPTZAction.EZPTZActionSTOP);
-                            break;
-                        case R.id.ptz_right_btn:
-                            mPtzControlLy.setBackgroundResource(R.drawable.ptz_bg);
-                            ptzOption(EZPTZCommand.EZPTZCommandRight, EZPTZAction.EZPTZActionSTOP);
-                            break;
-                        default:
-                            break;
+                    if(view.getId() == R.id.talkback_control_btn){
+                        mEZPlayer.setVoiceTalkStatus(false);
+                        mTalkRingView.setVisibility(View.GONE);
+                    }else if(view.getId() == R.id.ptz_top_btn){
+                        mPtzControlLy.setBackgroundResource(R.drawable.ptz_bg);
+                        ptzOption(EZPTZCommand.EZPTZCommandUp, EZPTZAction.EZPTZActionSTOP);
+                    }else if(view.getId() == R.id.ptz_bottom_btn){
+                        mPtzControlLy.setBackgroundResource(R.drawable.ptz_bg);
+                        ptzOption(EZPTZCommand.EZPTZCommandDown, EZPTZAction.EZPTZActionSTOP);
+                    }else if(view.getId() == R.id.ptz_left_btn){
+                        mPtzControlLy.setBackgroundResource(R.drawable.ptz_bg);
+                        ptzOption(EZPTZCommand.EZPTZCommandLeft, EZPTZAction.EZPTZActionSTOP);
+                    }else if(view.getId() == R.id.ptz_right_btn){
+                        mPtzControlLy.setBackgroundResource(R.drawable.ptz_bg);
+                        ptzOption(EZPTZCommand.EZPTZCommandRight, EZPTZAction.EZPTZActionSTOP);
                     }
                     break;
-                default:
-                    break;*/
+
             }
             return false;
         }
@@ -2082,6 +2043,7 @@ public class EZRealPlayActivity extends RootActivity implements OnClickListener,
             }
 
             mEZPlayer.setPlayVerifyCode(DataManager.getInstance().getDeviceSerialVerifyCode(mCameraInfo.getDeviceSerial()));
+
 //            if (mDeviceInfo.getIsEncrypt() == 1) {
 //                mEZPlayer.setPlayVerifyCode(DataManager.getInstance().getDeviceSerialVerifyCode(mCameraInfo.getDeviceSerial()));
 //            }

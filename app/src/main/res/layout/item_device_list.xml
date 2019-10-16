@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="53dp">
+        android:layout_height="52dp">
 
         <ImageView
             android:id="@+id/connect_img"
@@ -50,12 +50,20 @@
     <!-- 侧滑菜单选项，这里可以有多个选项。我这里就用了置顶和删除两个选项-->
 
     <Button
-        android:id="@+id/delete_btn"
-        android:layout_width="117dp"
-        android:background="@android:color/holo_red_dark"
+        android:id="@+id/learn_btn"
+        android:layout_width="80dp"
+        android:background="@color/text_blue"
         android:layout_height="match_parent"
-        android:text="删除"
-        android:textSize="16dp"
+        android:text="红外学习"
+        android:textSize="15dp"
+        android:textColor="@android:color/white"/>
+    <Button
+        android:id="@+id/edit_btn"
+        android:layout_width="80dp"
+        android:background="@color/text_hint"
+        android:layout_height="match_parent"
+        android:text="编辑"
+        android:textSize="15dp"
         android:textColor="@android:color/white"/>
 
 </com.mcxtzhang.swipemenulib.SwipeMenuLayout>

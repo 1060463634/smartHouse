@@ -50,7 +50,6 @@ public class MyApplication extends Application {
         /** * APP_KEY请替换成自己申请的 */
         EZOpenSDK.initLib(this, "a2b622cdd9bf4c2c9b2b0904181c0a06");
 
-
     }
 
 

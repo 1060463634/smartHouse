@@ -1,4 +1,5 @@
 package com.qqcs.smartHouse.fragment;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -76,7 +77,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by ameng on 2016/6/15.
  */
-public class HomeFragment extends BaseFragment implements OnTabSelectListener{
+public class HomeFragment extends BaseFragment implements OnTabSelectListener {
 
     private View mRootView;
     private Context mContext;
@@ -142,8 +143,7 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
     }
 
 
-
-    private void initView(){
+    private void initView() {
 
         mRoomManageImg.setOnClickListener(this);
 
@@ -158,14 +158,14 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
         getRoomInfo();
 
         //初始化popupwindow
-        mPopwindow = new MyHomesListPopupWindow(getContext(),this,mHomeImg);
+        mPopwindow = new MyHomesListPopupWindow(getContext(), this, mHomeImg);
 
         // 下拉刷新
         final MaterialHeader header = new MaterialHeader(mContext);
         int[] colors = getResources().getIntArray(R.array.google_colors);
         header.setColorSchemeColors(colors);
         header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, CommonUtil.dip2px(mContext,15), 0, CommonUtil.dip2px(mContext,10));
+        header.setPadding(0, CommonUtil.dip2px(mContext, 15), 0, CommonUtil.dip2px(mContext, 10));
         header.setPtrFrameLayout(mPtrFrame);
         mPtrFrame.setHeaderView(header);
         mPtrFrame.addPtrUIHandler(header);
@@ -176,9 +176,9 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
                 frame.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getDeviceInfo(mRoomTitles.get(mTabLayout.getCurrentTab()).getRoomId() );
+                        getDeviceInfo(mRoomTitles.get(mTabLayout.getCurrentTab()).getRoomId());
                         getCurrentInfo();
-                        mPopwindow = new MyHomesListPopupWindow(getContext(),HomeFragment.this,mHomeImg);
+                        mPopwindow = new MyHomesListPopupWindow(getContext(), HomeFragment.this, mHomeImg);
                     }
                 }, 100);
             }
@@ -187,15 +187,13 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
     }
 
 
-
-
     private void getCurrentInfo() {
 
         String accessToken = (String) SharePreferenceUtil.
-                get(mContext, SP_Constants.ACCESS_TOKEN,"");
+                get(mContext, SP_Constants.ACCESS_TOKEN, "");
 
         String familyId = (String) SharePreferenceUtil.
-                get(mContext, SP_Constants.CURRENT_FAMILY_ID,"");
+                get(mContext, SP_Constants.CURRENT_FAMILY_ID, "");
 
         String timestamp = System.currentTimeMillis() + "";
         JSONObject object = CommonUtil.getRequstJson(mContext);
@@ -216,7 +214,7 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
                 .postString()
                 .tag(this)
                 .url(Constants.HTTP_GET_CURRENT_INFO)
-                .addHeader("access-token",accessToken)
+                .addHeader("access-token", accessToken)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .content(object.toString())
                 .build()
@@ -225,9 +223,9 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
                     @Override
                     public void onSuccess(CurUserInfoBean data) {
                         ImageLoaderUtil.getInstance().displayImage
-                                (Constants.HTTP_SERVER_DOMAIN + data.getFamilyImg(),mHomeImg);
+                                (Constants.HTTP_SERVER_DOMAIN + data.getFamilyImg(), mHomeImg);
                         mHomeNameTv.setText(data.getFamilyName());
-                        ((MainActivity)getActivity()).setmMessageNumTv(data.getUnreadCount());
+                        ((MainActivity) getActivity()).setmMessageNumTv(data.getUnreadCount());
 
                     }
 
@@ -240,10 +238,10 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
 
     public void getRoomInfo() {
         String accessToken = (String) SharePreferenceUtil.
-                get(mContext, SP_Constants.ACCESS_TOKEN,"");
+                get(mContext, SP_Constants.ACCESS_TOKEN, "");
 
         String familyId = (String) SharePreferenceUtil.
-                get(mContext, SP_Constants.CURRENT_FAMILY_ID,"");
+                get(mContext, SP_Constants.CURRENT_FAMILY_ID, "");
 
 
         String timestamp = System.currentTimeMillis() + "";
@@ -265,7 +263,7 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
                 .postString()
                 .tag(this)
                 .url(Constants.HTTP_GET_ROOM_LIST)
-                .addHeader("access-token",accessToken)
+                .addHeader("access-token", accessToken)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .content(object.toString())
                 .build()
@@ -274,7 +272,7 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
                     @Override
                     public void onSuccess(RoomListBean json) {
                         ImageLoaderUtil.getInstance().displayImage
-                                (Constants.HTTP_SERVER_DOMAIN + json.getFamilyImg(),mHomeImg);
+                                (Constants.HTTP_SERVER_DOMAIN + json.getFamilyImg(), mHomeImg);
                         mHomeNameTv.setText(json.getFamilyName());
 
                         mRoomTitles.clear();
@@ -304,10 +302,10 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
     private void getDeviceInfo(String roomId) {
 
         String accessToken = (String) SharePreferenceUtil.
-                get(mContext, SP_Constants.ACCESS_TOKEN,"");
+                get(mContext, SP_Constants.ACCESS_TOKEN, "");
 
         String familyId = (String) SharePreferenceUtil.
-                get(mContext, SP_Constants.CURRENT_FAMILY_ID,"");
+                get(mContext, SP_Constants.CURRENT_FAMILY_ID, "");
 
         String timestamp = System.currentTimeMillis() + "";
         JSONObject object = CommonUtil.getRequstJson(mContext);
@@ -329,7 +327,7 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
                 .postString()
                 .tag(this)
                 .url(Constants.HTTP_GET_DEVICE_INFO)
-                .addHeader("access-token",accessToken)
+                .addHeader("access-token", accessToken)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .content(object.toString())
                 .build()
@@ -350,6 +348,7 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
                         ToastUtil.showToast(mContext, message);
                         mPtrFrame.refreshComplete();
                     }
+
                     @Override
                     public void onError(Call call, Exception e, int i) {
                         super.onError(call, e, i);
@@ -360,14 +359,24 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(EventBusBean event){
+    public void onEventBus(EventBusBean event) {
 
-        switch (event.getType()){
+        switch (event.getType()) {
 
             case EventBusBean.FAMILY_ID_CHANGED:
                 getRoomInfo();
                 mPopwindow = new MyHomesListPopupWindow(getContext(),
-                        HomeFragment.this,mHomeImg);
+                        HomeFragment.this, mHomeImg);
+
+                break;
+
+            case EventBusBean.REFRESH_HOME:
+                getDeviceInfo(mRoomTitles.get(mTabLayout.getCurrentTab()).getRoomId());
+
+                break;
+
+            case EventBusBean.REFRESH_HOME_AND_PROPT:
+                getDeviceInfo(mRoomTitles.get(mTabLayout.getCurrentTab()).getRoomId());
 
                 break;
 
@@ -388,9 +397,14 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
     }
 
 
+    public String getCurrentRoomId() {
+        return mRoomTitles.get(mTabLayout.getCurrentTab()).getRoomId();
+    }
+
+
     public void setDeviceAdapter() {
         if (mDeviceAdapter == null) {
-            mDeviceAdapter = new DeviceListAdapter(mContext, mDeviceDatas);
+            mDeviceAdapter = new DeviceListAdapter(mContext,this, mDeviceDatas);
             mDeviceList.setAdapter(mDeviceAdapter);
         } else {
             mDeviceAdapter.refreshData(mDeviceDatas);
@@ -401,14 +415,14 @@ public class HomeFragment extends BaseFragment implements OnTabSelectListener{
     @Override
     public void onMultiClick(View v) {
         Intent intent;
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.home_img:
                 mPopwindow.show();
 
                 break;
             case R.id.room_manage_img:
                 intent = new Intent(mContext, RoomManageActivity.class);
-                startActivityForResult(intent,1);
+                startActivityForResult(intent, 1);
 
                 break;
 

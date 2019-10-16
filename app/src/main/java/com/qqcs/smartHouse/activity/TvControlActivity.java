@@ -74,6 +74,8 @@ public class TvControlActivity extends BaseActivity{
 
     private String mDeviceId;
     private String mPropId;
+    private String mCommandType;
+    private String mTitleName;
     private List<PropBean> propBeans = new ArrayList<>();
 
 
@@ -82,14 +84,22 @@ public class TvControlActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tv_control);
         ButterKnife.bind(this);
-        setTitleName("电视遥控器");
+        mDeviceId = getIntent().getStringExtra("deviceId");
+        mPropId = getIntent().getStringExtra("propId");
+        mCommandType = getIntent().getStringExtra("commandType");
+        mTitleName = getIntent().getStringExtra("titleName");
+
+        if(mCommandType.equalsIgnoreCase("F1")){
+            setTitleName(mTitleName + " - 学习模式");
+        }else {
+            setTitleName(mTitleName);
+        }
+
         initView();
 
     }
 
     private void initView() {
-        mDeviceId = getIntent().getStringExtra("deviceId");
-        mPropId = getIntent().getStringExtra("propId");
 
         mTvOkImg.setOnClickListener(this);
         mTvUpImg.setOnClickListener(this);
@@ -147,9 +157,9 @@ public class TvControlActivity extends BaseActivity{
                             if(propBeans.get(i).getPropTypeCode().equalsIgnoreCase("Power")){
                                 String value = propBeans.get(i).getPropValue();
                                 if(value.equalsIgnoreCase("0")){
-                                    controlTv("Power","1","F0");
+                                    controlTv("Power","1",mCommandType);
                                 }else {
-                                    controlTv("Power","0","F0");
+                                    controlTv("Power","0",mCommandType);
                                 }
                             }
                         }
@@ -225,38 +235,38 @@ public class TvControlActivity extends BaseActivity{
                 break;
 
             case R.id.tv_ok_img:
-                controlTv("OK","1","F0");
+                controlTv("OK","1",mCommandType);
                 break;
             case R.id.tv_up_img:
-                controlTv("Up","1","F0");
+                controlTv("Up","1",mCommandType);
                 break;
             case R.id.tv_down_img:
-                controlTv("Down","1","F0");
+                controlTv("Down","1",mCommandType);
                 break;
             case R.id.tv_left_img:
-                controlTv("Left","1","F0");
+                controlTv("Left","1",mCommandType);
                 break;
             case R.id.tv_right_img:
-                controlTv("Right","1","F0");
+                controlTv("Right","1",mCommandType);
                 break;
 
             case R.id.volume_add_img:
-                controlTv("VoiceUp","1","F0");
+                controlTv("VoiceUp","1",mCommandType);
                 break;
             case R.id.volume_delete_img:
-                controlTv("VoiceDown","1","F0");
+                controlTv("VoiceDown","1",mCommandType);
                 break;
             case R.id.channel_add_img:
-                controlTv("ChannelUp","1","F0");
+                controlTv("ChannelUp","1",mCommandType);
                 break;
             case R.id.channel_delete_img:
-                controlTv("ChannelDown","1","F0");
+                controlTv("ChannelDown","1",mCommandType);
                 break;
             case R.id.tv_home_img:
-                controlTv("Main","1","F0");
+                controlTv("Main","1",mCommandType);
                 break;
             case R.id.tv_back_img:
-                controlTv("Back","1","F0");
+                controlTv("Back","1",mCommandType);
                 break;
 
 

@@ -538,35 +538,27 @@ public class EZPlayBackListActivity extends RootActivity implements QueryPlayBac
     }
 
     private void showTab(int id) {
-        switch (id) {
-            /*case R.id.novideo_img:
-                novideoImg.setVisibility(View.VISIBLE);
-                loadingBar.setVisibility(View.GONE);
-                mTabContentMainFrame.setVisibility(View.VISIBLE);
-                break;
-            case R.id.novideo_img_device:
-                mNoVideoImgLocal.setVisibility(View.VISIBLE);
-                mPinnedHeaderListViewForLocal.setVisibility(View.GONE);
-                loadingBar.setVisibility(View.GONE);
-                mTabContentMainFrame.setVisibility(View.VISIBLE);
-                break;
-            case R.id.loadingTextView:
-                novideoImg.setVisibility(View.GONE);
-                loadingBar.setVisibility(View.VISIBLE);
-                mTabContentMainFrame.setVisibility(View.GONE);
-                break;
-            case R.id.content_tab_device_root:
-                mNoVideoImgLocal.setVisibility(View.GONE);
-                loadingBar.setVisibility(View.GONE);
-                mTabContentMainFrame.setVisibility(View.VISIBLE);
-                break;
-            case R.id.ez_tab_content_frame:
-                novideoImg.setVisibility(View.GONE);
-                loadingBar.setVisibility(View.GONE);
-                mTabContentMainFrame.setVisibility(View.VISIBLE);
-                break;
-            default:
-                break;*/
+        if(id == R.id.novideo_img){
+            novideoImg.setVisibility(View.VISIBLE);
+            loadingBar.setVisibility(View.GONE);
+            mTabContentMainFrame.setVisibility(View.VISIBLE);
+        }else if(id == R.id.novideo_img_device){
+            mNoVideoImgLocal.setVisibility(View.VISIBLE);
+            mPinnedHeaderListViewForLocal.setVisibility(View.GONE);
+            loadingBar.setVisibility(View.GONE);
+            mTabContentMainFrame.setVisibility(View.VISIBLE);
+        }else if(id == R.id.loadingTextView){
+            novideoImg.setVisibility(View.GONE);
+            loadingBar.setVisibility(View.VISIBLE);
+            mTabContentMainFrame.setVisibility(View.GONE);
+        }else if(id == R.id.content_tab_device_root){
+            mNoVideoImgLocal.setVisibility(View.GONE);
+            loadingBar.setVisibility(View.GONE);
+            mTabContentMainFrame.setVisibility(View.VISIBLE);
+        }else if(id == R.id.ez_tab_content_frame){
+            novideoImg.setVisibility(View.GONE);
+            loadingBar.setVisibility(View.GONE);
+            mTabContentMainFrame.setVisibility(View.VISIBLE);
         }
     }
 
@@ -2094,51 +2086,39 @@ public class EZPlayBackListActivity extends RootActivity implements QueryPlayBac
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            /*case R.id.query_exception_ly:
-                startQueryCloudRecordFiles();
-                break;
-            case R.id.cancel_auto_play_btn:
-                autoLayout.setVisibility(View.GONE);
-                break;
-            case R.id.loading_play_btn:
-                notPause = true;
-                pauseBtn.setBackgroundResource(R.drawable.remote_list_pause_btn_selector);
-                pausePlay();
-                break;
-            case R.id.error_replay_btn:
-            case R.id.replay_btn:
-                onReplayBtnClick();
-                break;
-            case R.id.next_play_btn:
-                onNextPlayBtnClick();
-                break;
-            case R.id.remote_playback_pause_btn:
-                onPlayPauseBtnClick();
-                break;
-            case R.id.remote_playback_sound_btn:
-                onSoundBtnClick();
-                break;
-            case R.id.remote_playback_capture_btn:
-                onCapturePicBtnClick();
-                break;
-            case R.id.remote_playback_video_recording_btn:
-                onRecordBtnClick();
-                break;
-            case R.id.exit_btn:
-                onPlayExitBtnOnClick();
-                break;
-            case R.id.control_area:
-                break;
-            case R.id.delete_playback:
-                if (sectionAdapter != null && sectionAdapter.getSelectedCloudFiles().size() < 1) {
-                } else {
-                    showDelDialog();
-                }
-                break;
-            default:
-                break;*/
+        int id = v.getId();
+        if(id == R.id.query_exception_ly){
+            startQueryCloudRecordFiles();
+        }else if(id == R.id.cancel_auto_play_btn){
+            autoLayout.setVisibility(View.GONE);
+        }else if(id == R.id.loading_play_btn){
+            notPause = true;
+            pauseBtn.setBackgroundResource(R.drawable.remote_list_pause_btn_selector);
+            pausePlay();
+        }else if(id == R.id.error_replay_btn){
+            onReplayBtnClick();
+        }else if(id == R.id.replay_btn){
+            onReplayBtnClick();
+        }else if(id == R.id.next_play_btn){
+            onNextPlayBtnClick();
+        }else if(id == R.id.remote_playback_pause_btn){
+            onPlayPauseBtnClick();
+        }else if(id == R.id.remote_playback_sound_btn){
+            onSoundBtnClick();
+        }else if(id == R.id.remote_playback_capture_btn){
+            onCapturePicBtnClick();
+        }else if(id == R.id.remote_playback_video_recording_btn){
+            onRecordBtnClick();
+        }else if(id == R.id.exit_btn){
+            onPlayExitBtnOnClick();
+        } else if(id == R.id.control_area){
+        }else if(id == R.id.delete_playback){
+            if (sectionAdapter != null && sectionAdapter.getSelectedCloudFiles().size() < 1) {
+            } else {
+                showDelDialog();
+            }
         }
+
     }
 
     private void showDelDialog() { }
@@ -2337,17 +2317,13 @@ public class EZPlayBackListActivity extends RootActivity implements QueryPlayBac
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        switch (v.getId()) {
-           /* case R.id.remote_playback_area:
-                onPlayAreaTouched();
-                break;
-            case R.id.control_area:
-                break;
-            case R.id.query_exception_ly:
-                startQueryCloudRecordFiles();
-                break;
-            default:
-                break;*/
+        int id = v.getId();
+        if(id == R.id.remote_playback_area){
+            onPlayAreaTouched();
+        }else if(id == R.id.control_area){
+
+        }else if(id == R.id.query_exception_ly){
+            startQueryCloudRecordFiles();
         }
         return false;
     }

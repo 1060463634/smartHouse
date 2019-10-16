@@ -47,6 +47,12 @@ public class Constants {
     public static final String HTTP_ENTER_FAMILY = HTTP_SERVER_DOMAIN + "/app/family/member/sendJoinRequest";
     public static final String HTTP_GET_DEVICE_PROPS = HTTP_SERVER_DOMAIN + "/app/device/getProps";
     public static final String HTTP_INFRARED_COMMAND = HTTP_SERVER_DOMAIN + "/app/device/infraredCommand";
+    public static final String HTTP_GET_ACCESSTOKEN = HTTP_SERVER_DOMAIN + "/app/ezviz/getAccessToken";
+    public static final String HTTP_DEVICE_UPDATE = HTTP_SERVER_DOMAIN + "/app/device/update";
+
+
+    //情景
+    public static final String HTTP_SITUATION_DOACTION = HTTP_SERVER_DOMAIN + "/app/situation/doAction";
 
 
 

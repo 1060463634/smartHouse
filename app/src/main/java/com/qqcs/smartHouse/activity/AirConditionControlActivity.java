@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.qqcs.smartHouse.R;
 import com.qqcs.smartHouse.application.Constants;
 import com.qqcs.smartHouse.application.SP_Constants;
+import com.qqcs.smartHouse.fragment.HomeFragment;
+import com.qqcs.smartHouse.models.EventBusBean;
 import com.qqcs.smartHouse.models.PropBean;
 import com.qqcs.smartHouse.network.CommonJsonList;
 import com.qqcs.smartHouse.network.MyStringCallback;
@@ -20,10 +22,14 @@ import com.qqcs.smartHouse.utils.CommonUtil;
 import com.qqcs.smartHouse.utils.MD5Utils;
 import com.qqcs.smartHouse.utils.SharePreferenceUtil;
 import com.qqcs.smartHouse.utils.ToastUtil;
+import com.qqcs.smartHouse.widgets.MyHomesListPopupWindow;
 import com.qqcs.smartHouse.widgets.SpeedPopupWindow;
 import com.qqcs.smartHouse.widgets.WeiboDialogUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -88,6 +94,8 @@ public class AirConditionControlActivity extends BaseActivity {
 
     private String mDeviceId;
     private String mPropId;
+    private String mCommandType;
+    private String mTitleName;
     private List<PropBean> propBeans = new ArrayList<>();
     private SpeedPopupWindow mSpeedPopwindow;
     private Dialog mDialog;
@@ -97,14 +105,49 @@ public class AirConditionControlActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_air_control);
         ButterKnife.bind(this);
-        setTitleName("空调遥控器");
+
+        mDeviceId = getIntent().getStringExtra("deviceId");
+        mPropId = getIntent().getStringExtra("propId");
+        mCommandType = getIntent().getStringExtra("commandType");
+        mTitleName = getIntent().getStringExtra("titleName");
+
+        if(mCommandType.equalsIgnoreCase("F1")){
+            setTitleName(mTitleName +" - 学习模式");
+        }else {
+            setTitleName(mTitleName);
+        }
+
+        EventBus.getDefault().register(this);
         initView();
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(EventBusBean event){
+
+        switch (event.getType()){
+
+
+            case EventBusBean.REFRESH_PROPT:
+                getDeviceProp();
+                break;
+
+            case EventBusBean.REFRESH_HOME_AND_PROPT:
+                getDeviceProp();
+                break;
+
+        }
+
+    }
+
     private void initView() {
-        mDeviceId = getIntent().getStringExtra("deviceId");
-        mPropId = getIntent().getStringExtra("propId");
 
         mTvLeftImg.setOnClickListener(this);
         mTvRightImg.setOnClickListener(this);
@@ -226,7 +269,7 @@ public class AirConditionControlActivity extends BaseActivity {
                 .content(object.toString())
                 .build()
                 .execute(new MyStringCallback<PropBean>(this,
-                        PropBean.class, true, true) {
+                        PropBean.class, false, true) {
 
                     @Override
                     public void onSuccess(CommonJsonList<PropBean> json) {
@@ -331,7 +374,7 @@ public class AirConditionControlActivity extends BaseActivity {
                 try {
                     int temp = Integer.parseInt(value);
                     int temp2 = temp - 1;
-                    controlAC("Temperature", temp2 + "", "F0");
+                    controlAC("Temperature", temp2 + "", mCommandType);
                 } catch (Exception e) {
                     ToastUtil.showToast(this, "温度值错误");
                 }
@@ -343,7 +386,7 @@ public class AirConditionControlActivity extends BaseActivity {
                 try {
                     int temp = Integer.parseInt(value);
                     int temp2 = temp + 1;
-                    controlAC("Temperature", temp2 + "", "F0");
+                    controlAC("Temperature", temp2 + "", mCommandType);
                 } catch (Exception e) {
                     ToastUtil.showToast(this, "温度值错误");
                 }
@@ -353,9 +396,9 @@ public class AirConditionControlActivity extends BaseActivity {
             case R.id.switch_layout:
                 value = getValueByType("Power");
                 if (value.equalsIgnoreCase("1")) {
-                    controlAC("Power", "0", "F0");
+                    controlAC("Power", "0", mCommandType);
                 } else {
-                    controlAC("Power", "1", "F0");
+                    controlAC("Power", "1", mCommandType);
                 }
 
                 break;
@@ -363,33 +406,33 @@ public class AirConditionControlActivity extends BaseActivity {
             case R.id.left_right_layout:
                 value = getValueByType("LateralSwinging");
                 if (value.equalsIgnoreCase("1")) {
-                    controlAC("LateralSwinging", "0", "F0");
+                    controlAC("LateralSwinging", "0", mCommandType);
                 } else {
-                    controlAC("LateralSwinging", "1", "F0");
+                    controlAC("LateralSwinging", "1", mCommandType);
                 }
 
                 break;
             case R.id.up_down_layout:
                 value = getValueByType("LongitudinalSwinging");
                 if (value.equalsIgnoreCase("1")) {
-                    controlAC("LongitudinalSwinging", "0", "F0");
+                    controlAC("LongitudinalSwinging", "0", mCommandType);
                 } else {
-                    controlAC("LongitudinalSwinging", "1", "F0");
+                    controlAC("LongitudinalSwinging", "1", mCommandType);
                 }
 
                 break;
 
             case R.id.cold_layout:
-                controlAC("Mode", "1", "F0");
+                controlAC("Mode", "1", mCommandType);
                 break;
             case R.id.hot_layout:
-                controlAC("Mode", "2", "F0");
+                controlAC("Mode", "2", mCommandType);
                 break;
             case R.id.water_layout:
-                controlAC("Mode", "3", "F0");
+                controlAC("Mode", "3", mCommandType);
                 break;
             case R.id.auto_layout:
-                controlAC("Mode", "4", "F0");
+                controlAC("Mode", "4", mCommandType);
                 break;
 
 
@@ -406,7 +449,7 @@ public class AirConditionControlActivity extends BaseActivity {
     public void setSpeed(String speedValue,boolean sendValue) {
 
         if(sendValue){
-            controlAC("WindSpeed", speedValue, "F0");
+            controlAC("WindSpeed", speedValue, mCommandType);
 
         }else {
 

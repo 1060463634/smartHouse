@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.qqcs.smartHouse"
     android:versionCode="1"
-    android:versionName="1.0.3">
+    android:versionName="1.0.4">
 
     <!--网络-->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -154,6 +154,26 @@
             android:configChanges="orientation|keyboardHidden"/>
         <activity
             android:name="com.qqcs.smartHouse.activity.AirConditionControlActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.DoorLockActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.OpenWindowActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.DeviceEditActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.EZDeviceSettingActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.ModifyDeviceNameActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
 

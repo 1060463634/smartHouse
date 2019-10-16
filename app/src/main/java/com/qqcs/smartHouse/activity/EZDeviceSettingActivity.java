@@ -1,4 +1,4 @@
-package com.videogo.devicemgt;
+package com.qqcs.smartHouse.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,32 +12,49 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.qqcs.smartHouse.adapter.RoomSpinnerAdapter;
+import com.qqcs.smartHouse.application.Constants;
+import com.qqcs.smartHouse.application.SP_Constants;
+import com.qqcs.smartHouse.models.EventBusBean;
+import com.qqcs.smartHouse.models.RoomBean;
+import com.qqcs.smartHouse.models.RoomListBean;
+import com.qqcs.smartHouse.network.MyStringCallback;
+import com.qqcs.smartHouse.utils.CommonUtil;
+import com.qqcs.smartHouse.utils.MD5Utils;
+import com.qqcs.smartHouse.utils.SharePreferenceUtil;
+import com.qqcs.smartHouse.utils.ToastUtil;
 import com.videogo.EzvizApplication;
 import com.videogo.RootActivity;
-
 import com.videogo.constant.IntentConsts;
+import com.videogo.devicemgt.EZUpgradeDeviceActivity;
 import com.videogo.errorlayer.ErrorInfo;
 import com.videogo.exception.BaseException;
 import com.videogo.exception.ErrorCode;
 import com.videogo.openapi.EZConstants;
-import com.videogo.openapi.EZOpenSDK;
 import com.videogo.openapi.bean.EZDeviceInfo;
 import com.videogo.openapi.bean.EZDeviceVersion;
 import com.videogo.ui.cameralist.EZCameraListActivity;
 import com.videogo.ui.util.ActivityUtils;
-import com.videogo.ui.util.DataManager;
 import com.videogo.util.ConnectionDetector;
 import com.videogo.util.LogUtil;
 import com.videogo.widget.TitleBar;
 import com.videogo.widget.WaitDialog;
+import com.zhy.http.okhttp.OkHttpUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import ezviz.ezopensdk.R;
+import okhttp3.MediaType;
 
 public class EZDeviceSettingActivity extends RootActivity {
     private final String TAG = "EZDeviceSettingActivity";
@@ -88,7 +105,13 @@ public class EZDeviceSettingActivity extends RootActivity {
     private EZDeviceVersion mDeviceVersion = null;
     private EZDeviceInfo mEZDeviceInfo = null;
 
-
+    private String mDeviceId;
+    private String mPropId;
+    private String mDeviceName;
+    private String mRoomId;
+    private Spinner mRoomSpinner;
+    private ArrayList<RoomBean> mRoomInfos = new ArrayList<>();
+    private RoomSpinnerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,11 +159,37 @@ public class EZDeviceSettingActivity extends RootActivity {
         mDeviceDeleteView = findViewById(R.id.device_delete);
         mDeviceSerialTextView = (TextView) findViewById(R.id.ez_device_serial);
 
+        mRoomSpinner = (Spinner) findViewById(R.id.room_spinner);
     }
+
+    private boolean firstIn = true;
 
     private void initData() {
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("Bundle");
+        mDeviceId = intent.getStringExtra("deviceId");
+        mPropId = intent.getStringExtra("propId");
+        mDeviceName = intent.getStringExtra("deviceName");
+        mRoomId = intent.getStringExtra("roomId");
+        getRoomList();
+
+        mRoomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(firstIn){
+                    firstIn = false;
+                    return;
+                }
+                saveDeviceInfo(mDeviceTypeSnView.getText().toString(),
+                        mRoomInfos.get(position).getRoomId());
+                mRoomId = mRoomInfos.get(position).getRoomId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
 
         mEZDeviceInfo = bundle.getParcelable(IntentConsts.EXTRA_DEVICE_INFO);
         if (mEZDeviceInfo == null){
@@ -148,6 +197,118 @@ public class EZDeviceSettingActivity extends RootActivity {
             finish();
         }
     }
+
+    private void getRoomList() {
+        String accessToken = (String) SharePreferenceUtil.
+                get(this, SP_Constants.ACCESS_TOKEN,"");
+
+        String familyId = (String) SharePreferenceUtil.
+                get(this, SP_Constants.CURRENT_FAMILY_ID,"");
+
+        String timestamp = System.currentTimeMillis() + "";
+        JSONObject object = CommonUtil.getRequstJson(getApplicationContext());
+        JSONObject dataObject = new JSONObject();
+
+        try {
+            dataObject.put("familyId", familyId);
+            dataObject.put("timestamp", timestamp);
+
+            object.put("data", dataObject);
+            object.put("sign", MD5Utils.md5s(familyId + timestamp));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkHttpUtils
+                .postString()
+                .tag(this)
+                .url(Constants.HTTP_GET_ROOM_LIST)
+                .addHeader("access-token",accessToken)
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+                .content(object.toString())
+                .build()
+                .execute(new MyStringCallback<RoomListBean>(this, RoomListBean.class, false, false) {
+
+                    @Override
+                    public void onSuccess(RoomListBean json) {
+                        mRoomInfos.clear();
+                        mRoomInfos.addAll(json.getRooms());
+                        setMyAdapter();
+
+                        for(int i = 0;i < mRoomInfos.size();i++){
+                            if(mRoomInfos.get(i).getRoomId().equalsIgnoreCase(mRoomId)){
+                                mRoomSpinner.setSelection(i);
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        ToastUtil.showToast(EZDeviceSettingActivity.this, message);
+                    }
+                });
+    }
+
+    private void saveDeviceInfo(final String name,String rooId) {
+
+
+        String accessToken = (String) SharePreferenceUtil.
+                get(this, SP_Constants.ACCESS_TOKEN,"");
+
+        String timestamp = System.currentTimeMillis() + "";
+        JSONObject object = CommonUtil.getRequstJson(getApplicationContext());
+        JSONObject dataObject = new JSONObject();
+
+        try {
+            dataObject.put("deviceId", mDeviceId);
+            dataObject.put("name", name);
+            dataObject.put("roomId", rooId);
+            dataObject.put("propId", mPropId);
+            dataObject.put("timestamp", timestamp);
+
+            object.put("data", dataObject);
+            object.put("sign", MD5Utils.md5s(
+                    mDeviceId + name + rooId + mPropId + timestamp));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkHttpUtils
+                .postString()
+                .tag(this)
+                .addHeader("access-token",accessToken)
+                .url(Constants.HTTP_DEVICE_UPDATE)
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+                .content(object.toString())
+                .build()
+                .execute(new MyStringCallback<Object>(this, Object.class, true, false) {
+
+                    @Override
+                    public void onSuccess(Object json) {
+                        EventBus.getDefault().post(new EventBusBean(EventBusBean.REFRESH_HOME));
+                        ToastUtil.showToast(EZDeviceSettingActivity.this, "修改成功！");
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        ToastUtil.showToast(EZDeviceSettingActivity.this, message);
+                    }
+                });
+    }
+
+    public void setMyAdapter() {
+        if (mAdapter == null) {
+            mAdapter = new RoomSpinnerAdapter(this, mRoomInfos);
+            mRoomSpinner.setAdapter(mAdapter);
+        } else {
+            mAdapter.refreshData(mRoomInfos);
+        }
+
+    }
+
 
     private void initTitleBar() {
         mTitleBar.setTitle(R.string.ez_setting);
@@ -170,8 +331,11 @@ public class EZDeviceSettingActivity extends RootActivity {
                     int id = v.getId();
                     if(id == R.id.device_info_layout){
                         intent = new Intent(EZDeviceSettingActivity.this, ModifyDeviceNameActivity.class);
-                        intent.putExtra(IntentConsts.EXTRA_NAME, mEZDeviceInfo.getDeviceName());
+                        intent.putExtra(IntentConsts.EXTRA_NAME, mDeviceName);
                         intent.putExtra(IntentConsts.EXTRA_DEVICE_ID,mEZDeviceInfo.getDeviceSerial());
+                        intent.putExtra("deviceId",mDeviceId);
+                        intent.putExtra("propId",mPropId);
+                        intent.putExtra("roomId",mRoomId);
                         startActivityForResult(intent, REQUEST_CODE_MODIFY_DEVICE_NAME);
                     }else if(id == R.id.defence_layout || id == R.id.defence_toggle_button){
                         new SetDefenceTask().execute(!(mEZDeviceInfo.getDefence() != 0));
@@ -232,9 +396,10 @@ public class EZDeviceSettingActivity extends RootActivity {
                 setupBaiduDeviceInfo(true, true);
             }
             if (requestCode == REQUEST_CODE_MODIFY_DEVICE_NAME){
-                String name = data.getStringExtra(IntentConsts.EXTRA_NAME);
-                if (!TextUtils.isEmpty(name)){
-                    mEZDeviceInfo.setDeviceName(name);
+                mDeviceName = data.getStringExtra(IntentConsts.EXTRA_NAME);
+                if (!TextUtils.isEmpty(mDeviceName)){
+                    mEZDeviceInfo.setDeviceName(mDeviceName);
+                    mDeviceTypeSnView.setText(mDeviceName);
                 }else{
                     LogUtil.debugLog(TAG,"modify device name is null");
                 }
@@ -254,6 +419,7 @@ public class EZDeviceSettingActivity extends RootActivity {
 
             //mDeviceNameView.setText(TextUtils.isEmpty(typeSn)?"":typeSn);
 
+            mDeviceTypeSnView.setText(mDeviceName);
 
             mDeviceInfoLayout.setOnClickListener(mOnClickListener);
             mDeviceSNLayout.setOnClickListener(mOnClickListener);
@@ -492,7 +658,7 @@ public class EZDeviceSettingActivity extends RootActivity {
         ViewGroup smsVerifyView = (ViewGroup) mLayoutInflater.inflate(R.layout.device_video_encrypt_dialog, null, true);
         final EditText etSmsCode = (EditText) smsVerifyView.findViewById(R.id.ez_sms_code_et);
 
-        new  AlertDialog.Builder(EZDeviceSettingActivity.this)  
+        new  AlertDialog.Builder(EZDeviceSettingActivity.this)
         .setTitle(R.string.input_device_verify_code)
         .setIcon(android.R.drawable.ic_dialog_info)   
         .setView(smsVerifyView)

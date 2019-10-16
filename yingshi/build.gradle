@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-android'
+
 
 android {
     sourceSets {
@@ -18,9 +17,6 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
-        ndk {
-            abiFilters "armeabi-v7a", "arm64-v8a"
-        }
     }
     buildTypes {
         release {
@@ -30,6 +26,7 @@ android {
     }
     productFlavors {
     }
+
 }
 
 dependencies {

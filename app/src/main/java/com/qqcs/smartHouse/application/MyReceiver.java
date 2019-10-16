@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import com.qqcs.smartHouse.activity.LoginActivity;
 import com.qqcs.smartHouse.activity.MainActivity;
+import com.qqcs.smartHouse.models.EventBusBean;
 import com.qqcs.smartHouse.network.MyStringCallback;
 import com.qqcs.smartHouse.utils.CommonUtil;
 import com.qqcs.smartHouse.utils.LogUtil;
@@ -16,6 +17,7 @@ import com.qqcs.smartHouse.utils.MD5Utils;
 import com.qqcs.smartHouse.utils.SharePreferenceUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -120,8 +122,25 @@ public class MyReceiver extends BroadcastReceiver {
 	//send msg to MainActivity
 	private void processCustomMessage(Context context, String json) {
 		// {"familyId":43,"isReply":true,"option":3,"sendTime":1570871365805}
-//		JSONObject jsonObject = new JSONObject(json);
-//		jsonObject.getString("");
+		String currentFamilyId = (String) SharePreferenceUtil.
+				get(context, SP_Constants.CURRENT_FAMILY_ID,"");
+
+		JSONObject jsonObject = null;
+
+		try {
+			jsonObject = new JSONObject(json);
+			String familyId = jsonObject.getString("familyId");
+			String option = jsonObject.getString("option");
+
+			if(familyId.equalsIgnoreCase(currentFamilyId)){
+
+				EventBus.getDefault().post(new EventBusBean(option));
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
 
 		/*if (MainActivity.isForeground) {
 			String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
