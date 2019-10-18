@@ -418,6 +418,7 @@ public class HomeDetailActivity extends BaseActivity{
                 break;
             case R.id.home_qrcode_layout:
                 intent = new Intent(this,HomeQrcodeActivity.class);
+                intent.putExtra("familyId",familyId);
                 startActivity(intent);
                 break;
 

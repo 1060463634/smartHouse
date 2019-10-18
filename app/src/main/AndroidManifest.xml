@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.qqcs.smartHouse"
     android:versionCode="1"
-    android:versionName="1.0.4">
+    android:versionName="1.0.7">
 
     <!--网络-->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,6 +17,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -138,10 +140,6 @@
             android:configChanges="orientation|keyboardHidden"/>
         <activity
             android:name="com.qqcs.smartHouse.activity.RoomDetailActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden"/>
-        <activity
-            android:name="com.qqcs.smartHouse.activity.ScanQRCodeActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
         <activity

@@ -10,7 +10,7 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:paddingLeft="20dp"
-        android:paddingRight="5dp"
+        android:paddingRight="7dp"
         android:text="普通成员"
         android:textColor="@color/text_black_gray"
         android:textSize="16dp"/>

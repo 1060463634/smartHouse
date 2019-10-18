@@ -85,7 +85,7 @@ public class MemberDetailActivity extends BaseActivity{
 
         String[] mItems = {"普通成员","管理员"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (this,R.layout.item_spinner, mItems);
+                (this,android.R.layout.simple_spinner_item, mItems);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mRoleSpinner.setAdapter(adapter);
         if(userRole.equalsIgnoreCase(Constants.ROLE_LOAD)){

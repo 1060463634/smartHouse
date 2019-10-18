@@ -50,7 +50,6 @@ dependencies {
     implementation project(path: ':FlycoTabLayout_Lib')
     //时间订阅
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation files('libs/zxing.jar')
 
     //极光推送
     implementation 'cn.jiguang.sdk:jpush:3.3.6'
@@ -59,4 +58,6 @@ dependencies {
     //摄像头
     implementation 'com.hikvision.ezviz:ezviz-sdk:4.8.8'
     implementation project(path: ':yingshi')
+    //二维码
+    implementation 'com.github.yuzhiqiang1993:zxing:2.2.5'
 }

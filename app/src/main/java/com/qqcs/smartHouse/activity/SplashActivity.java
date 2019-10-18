@@ -33,17 +33,23 @@ import com.qqcs.smartHouse.R;
 import com.qqcs.smartHouse.application.Constants;
 import com.qqcs.smartHouse.application.SP_Constants;
 import com.qqcs.smartHouse.models.CitySn;
+import com.qqcs.smartHouse.models.FamilyInfoBean;
 import com.qqcs.smartHouse.models.LoginBean;
+import com.qqcs.smartHouse.network.CommonJsonList;
 import com.qqcs.smartHouse.network.MyStringCallback;
 import com.qqcs.smartHouse.utils.AESUtils;
 import com.qqcs.smartHouse.utils.CommonUtil;
 import com.qqcs.smartHouse.utils.LocationUtil;
 import com.qqcs.smartHouse.utils.LogUtil;
+import com.qqcs.smartHouse.utils.MD5Utils;
 import com.qqcs.smartHouse.utils.SharePreferenceUtil;
 import com.qqcs.smartHouse.utils.ToastUtil;
 import com.qqcs.smartHouse.widgets.MyAlertDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.Timer;
@@ -52,6 +58,7 @@ import java.util.TimerTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -170,7 +177,61 @@ public class SplashActivity extends BaseActivity {
     };
 
 
+    private void getFamily() {
+        String accessToken = (String) SharePreferenceUtil.
+                get(this, SP_Constants.ACCESS_TOKEN, "");
+        String timestamp = System.currentTimeMillis() + "";
+        JSONObject object = CommonUtil.getRequstJson(this.getApplicationContext());
+        JSONObject dataObject = new JSONObject();
 
+        try {
+            dataObject.put("familyId", "0");
+            dataObject.put("timestamp", timestamp);
+
+            object.put("data", dataObject);
+            object.put("sign", MD5Utils.md5s("0" + timestamp));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkHttpUtils
+                .postString()
+                .tag(this)
+                .url(Constants.HTTP_GET_FAMILY_LIST)
+                .addHeader("access-token", accessToken)
+                .mediaType(MediaType.parse("application/json; charset=utf-8"))
+                .content(object.toString())
+                .build()
+                .execute(new MyStringCallback<FamilyInfoBean>(this, FamilyInfoBean.class, false, true) {
+
+                    @Override
+                    public void onSuccess(CommonJsonList<FamilyInfoBean> json) {
+
+                        if(json.getData().size() != 0){
+                            String familyId = json.getData().get(0).getFamilyId();
+                            SharePreferenceUtil.put(SplashActivity.this,
+                                    SP_Constants.HAS_FAMILY, true);
+                            SharePreferenceUtil.put(SplashActivity.this,
+                                    SP_Constants.CURRENT_FAMILY_ID, familyId);
+                            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }else {
+                            Intent intent = new Intent(SplashActivity.this, WelcomeHomeActivity.class);
+                            startActivity(intent);
+                            finish();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        ToastUtil.showToast(SplashActivity.this, message);
+                    }
+                });
+    }
 
 
 
@@ -188,9 +249,7 @@ public class SplashActivity extends BaseActivity {
                finish();
 
            }else {
-               Intent intent = new Intent(this, WelcomeHomeActivity.class);
-               startActivity(intent);
-               finish();
+               getFamily();
            }
        }else {
            gotoLoginActivity();

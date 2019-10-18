@@ -66,7 +66,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:paddingRight="25dp"
-            android:text="1234567的家庭"
+            android:text=""
             android:textColor="#ff898989"
             android:textSize="16dp"
             android:gravity="right" />
@@ -104,7 +104,7 @@
             android:layout_centerVertical="true"
             android:paddingRight="25dp"
             android:layout_marginLeft="20dp"
-            android:text="请选择家庭位置"
+            android:text=""
             android:textColor="#ff898989"
             android:textSize="16dp"
             android:gravity="right" />
@@ -142,7 +142,7 @@
             android:layout_centerVertical="true"
             android:paddingRight="25dp"
             android:layout_marginLeft="20dp"
-            android:text="习大大"
+            android:text=""
             android:textColor="#ff898989"
             android:textSize="16dp"
             android:gravity="right" />

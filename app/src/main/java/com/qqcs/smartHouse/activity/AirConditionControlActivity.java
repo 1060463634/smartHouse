@@ -228,6 +228,13 @@ public class AirConditionControlActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(Object data) {
+                        final Timer t = new Timer();
+                        t.schedule(new TimerTask() {
+                            public void run() {
+                                getDeviceProp();
+                                t.cancel();
+                            }
+                        }, Constants.REFRESH_TIME);
                         //ToastUtil.showToast(AirConditionControlActivity.this, "执行成功,等待响应");
                     }
 

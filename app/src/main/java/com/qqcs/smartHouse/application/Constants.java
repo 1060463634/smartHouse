@@ -34,6 +34,7 @@ public class Constants {
     public static final String HTTP_CHANGE_PHONE = HTTP_SERVER_DOMAIN + "/app/user/changeUserPhone";
     public static final String HTTP_UPDATE_MEMBER = HTTP_SERVER_DOMAIN + "/app/family/member/update";
     public static final String HTTP_LOGOUT = HTTP_SERVER_DOMAIN + "/app/auth/logout";
+    public static final String HTTP_ACCEPT_MEMBER = HTTP_SERVER_DOMAIN + "/app/family/member/approvalJoinRequest";
 
 
     //首页
@@ -62,6 +63,13 @@ public class Constants {
     public static  String ROLE_LOAD = "0"; //户主
     public static  String ROLE_MANAGE = "1"; //管理员
     public static  String ROLE_NORMAL = "2"; //普通成员
+
+    public static final int REQUEST_CODE_SCAN = 102;
+    public static final int REQUEST_CREATE_FAMILY = 101;
+
+    public static final int REFRESH_TIME = 2000;
+
+
 
 
 

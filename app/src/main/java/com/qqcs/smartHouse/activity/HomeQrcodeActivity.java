@@ -26,20 +26,22 @@ public class HomeQrcodeActivity extends BaseActivity{
     @BindView(R.id.qrcode_img)
     ImageView mQrcodeImg;
 
+    private String familyId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_qrcode);
         ButterKnife.bind(this);
         setTitleName("家庭二维码");
+        familyId = getIntent().getStringExtra("familyId");
         initView();
 
     }
 
 
     private void initView(){
-        String familyId = (String) SharePreferenceUtil.
-                get(this, SP_Constants.CURRENT_FAMILY_ID,"");
+
         String encryptFamilyId = AESUtils.encrypt(familyId,
                 Constants.PASSWORD_ENCRYPT_SEED, AESUtils.MODE_BASE64);
 

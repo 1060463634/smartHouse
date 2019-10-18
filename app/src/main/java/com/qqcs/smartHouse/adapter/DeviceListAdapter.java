@@ -36,6 +36,7 @@ import com.qqcs.smartHouse.application.SP_Constants;
 import com.qqcs.smartHouse.fragment.HomeFragment;
 import com.qqcs.smartHouse.models.AccessTokenBean;
 import com.qqcs.smartHouse.models.DeviceBean;
+import com.qqcs.smartHouse.models.EventBusBean;
 import com.qqcs.smartHouse.models.RoomBean;
 import com.qqcs.smartHouse.network.MyStringCallback;
 import com.qqcs.smartHouse.utils.CommonUtil;
@@ -58,11 +59,14 @@ import com.videogo.ui.realplay.EZRealPlayActivity;
 import com.videogo.util.DateTimeUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.MediaType;
 
@@ -496,6 +500,14 @@ public class DeviceListAdapter extends BaseAdapter{
                     @Override
                     public void onSuccess(Object data) {
                         ToastUtil.showToast(mContext,"发送成功");
+                        final Timer t = new Timer();
+                        t.schedule(new TimerTask() {
+                            public void run() {
+                                EventBus.getDefault().post(new EventBusBean(EventBusBean.REFRESH_HOME));
+
+                                t.cancel();
+                            }
+                        }, Constants.REFRESH_TIME);
                     }
 
                     @Override
