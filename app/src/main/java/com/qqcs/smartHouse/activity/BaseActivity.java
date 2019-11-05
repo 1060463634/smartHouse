@@ -42,7 +42,9 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
                     || this instanceof MainActivity || this instanceof TvControlActivity
                     || this instanceof AirConditionControlActivity
                     || this instanceof DoorLockActivity
-                    || this instanceof OpenWindowActivity){
+                    || this instanceof OpenWindowActivity
+                    || this instanceof FootActivity
+                    || this instanceof LeftFootActivity){
                 View decorView = window.getDecorView();
                 decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE);

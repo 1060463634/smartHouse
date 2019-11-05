@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.qqcs.smartHouse"
     android:versionCode="1"
-    android:versionName="1.0.7">
+    android:versionName="1.1.1">
 
     <!--网络-->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -39,6 +39,11 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+
+    <!--蓝牙权限 -->
+    <uses-permission android:name = "android.permission.BLUETOOTH"/>
+    <!--启用应用启动设备发现或者操作蓝牙设备的超级管理员-->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
 
     <application
@@ -172,6 +177,26 @@
             android:configChanges="orientation|keyboardHidden"/>
         <activity
             android:name="com.qqcs.smartHouse.activity.ModifyDeviceNameActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.FootActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.LeftFootActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+        android:name="com.qqcs.smartHouse.activity.GatewayManageActivity"
+        android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboardHidden"/>
+        <activity
+        android:name="com.qqcs.smartHouse.activity.GatewayConnectActivity"
+        android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name="com.qqcs.smartHouse.activity.BlueToothDetailActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
 

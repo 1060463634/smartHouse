@@ -24,5 +24,27 @@
     </LinearLayout>
     <include layout="@layout/layout_line_gray"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="19dp"
+        android:layout_marginLeft="21dp"
+        android:layout_marginRight="21dp"
+        android:text="添加装备"
+        android:textColor="#ff333333"
+        android:textSize="16dp"
+        android:gravity="center"
+        android:background="@drawable/shape_add_device">
+    </TextView>
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent" />
+
 
 </LinearLayout>

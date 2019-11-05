@@ -21,6 +21,7 @@ public class AnimationDemo {
 		animationSet.setFillAfter(true);
 		animationSet.setDuration(2000);
 		animationSet.setStartOffset(0);
+		animationSet.setRepeatMode(Animation.REVERSE);
 		animationSet.setInterpolator(new LinearInterpolator());
 
 		//0表示的是完全透明，１表示的是完全不透明

@@ -13,6 +13,8 @@ import com.qqcs.smartHouse.fragment.HomeFragment;
 import com.qqcs.smartHouse.fragment.MineFragment;
 import com.qqcs.smartHouse.fragment.ScenceFragment;
 import com.qqcs.smartHouse.fragment.ServiceFragment;
+import com.qqcs.smartHouse.utils.CommonUtil;
+import com.qqcs.smartHouse.utils.LogUtil;
 import com.qqcs.smartHouse.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -51,6 +53,8 @@ public class MainActivity extends BaseActivity {
 
         }
         mFragmentTabHost.setCurrentTab(0);
+        String ran = CommonUtil.getTimeHex();
+        LogUtil.d(ran);
 
     }
 

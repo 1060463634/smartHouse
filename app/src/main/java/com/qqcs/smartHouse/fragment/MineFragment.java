@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.qqcs.smartHouse.R;
 import com.qqcs.smartHouse.activity.CreateHomeActivity;
 import com.qqcs.smartHouse.activity.FillInfomationActivity;
+import com.qqcs.smartHouse.activity.GatewayManageActivity;
 import com.qqcs.smartHouse.activity.HomeManageActivity;
 import com.qqcs.smartHouse.activity.LoginActivity;
 import com.qqcs.smartHouse.activity.MainActivity;
@@ -57,6 +58,9 @@ public class MineFragment extends BaseFragment{
     @BindView(R.id.member_manage_layout)
     LinearLayout mMemberLayout;
 
+    @BindView(R.id.gateway_manage_layout)
+    LinearLayout mGatewayLayout;
+
     @BindView(R.id.version_tv)
     TextView mVersionTv;
 
@@ -83,7 +87,6 @@ public class MineFragment extends BaseFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
-        EventBus.getDefault().register(this);
     }
 
 
@@ -110,6 +113,7 @@ public class MineFragment extends BaseFragment{
     private void initView(){
         mHomeLayout.setOnClickListener(this);
         mInfoLayout.setOnClickListener(this);
+        mGatewayLayout.setOnClickListener(this);
         mMemberLayout.setOnClickListener(this);
         mVersionTv.setText(CommonUtil.getVersionName(mContext));
         getCurrentInfo();
@@ -174,6 +178,8 @@ public class MineFragment extends BaseFragment{
                         //普通成员成员管理不显示
                         if(data.getUserRole().equalsIgnoreCase(Constants.ROLE_NORMAL) ){
                             mMemberLayout.setVisibility(View.GONE);
+                        }else {
+                            mMemberLayout.setVisibility(View.VISIBLE);
                         }
 
                     }
@@ -202,6 +208,10 @@ public class MineFragment extends BaseFragment{
                 intent = new Intent(mContext, MemberManageActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.gateway_manage_layout:
+                intent = new Intent(mContext, GatewayManageActivity.class);
+                startActivity(intent);
+                break;
             case R.id.version_manage_layout:
 
                 break;
@@ -209,17 +219,11 @@ public class MineFragment extends BaseFragment{
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(EventBusBean event){
-        switch (event.getType()){
 
-            case EventBusBean.FAMILY_ID_CHANGED:
-                getCurrentInfo();
-                break;
-
-
-        }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getCurrentInfo();
     }
 
     @Override
@@ -227,7 +231,6 @@ public class MineFragment extends BaseFragment{
         super.onDestroy();
         //解除绑定
         bind.unbind();
-        EventBus.getDefault().unregister(this);
     }
 
 

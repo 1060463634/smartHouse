@@ -134,13 +134,6 @@ public class OpenWindowActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Object data) {
                         ToastUtil.showToast(OpenWindowActivity.this, "执行成功");
-                        final Timer t = new Timer();
-                        t.schedule(new TimerTask() {
-                            public void run() {
-                                getDeviceProp();
-                                t.cancel();
-                            }
-                        }, Constants.REFRESH_TIME);
 
                     }
 

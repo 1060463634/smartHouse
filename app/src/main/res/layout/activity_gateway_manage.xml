@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg_white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title_bar" />
+
+    <include layout="@layout/layout_line_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:orientation="vertical"
+        android:background="@drawable/shape_layout_white">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+            <ImageView
+                android:id="@+id/gateway_img"
+                android:layout_width="280dp"
+                android:layout_height="260dp"
+                android:src="@drawable/ic_gateway"
+                android:scaleType="fitXY"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="70dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_zigbee_icon"
+                android:scaleType="fitXY"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/gateway_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="网关名称：WG0003"
+            android:textColor="@color/text_black"
+            android:textSize="16dp" />
+        <TextView
+            android:id="@+id/gateway_version_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="15dp"
+            android:text="固件版本号：01010000"
+            android:textColor="@color/text_black"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:text="若您想修改网关连接的Wi-Fi账号和密码，请先打开手机蓝牙，然后点击上图网关选项卡进行连接。"
+        android:textColor="@color/text_black_gray"
+        android:textSize="17dp" />
+
+
+</LinearLayout>

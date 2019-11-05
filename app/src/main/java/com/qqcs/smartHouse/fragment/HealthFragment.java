@@ -1,5 +1,6 @@
 package com.qqcs.smartHouse.fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,24 +9,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.qqcs.smartHouse.R;
+import com.qqcs.smartHouse.activity.FootActivity;
+import com.qqcs.smartHouse.adapter.HealthListAdapter;
+import com.qqcs.smartHouse.adapter.HomeManageAdapter;
+import com.qqcs.smartHouse.models.FamilyInfoBean;
+import com.qqcs.smartHouse.utils.ToastUtil;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-/**
- * Created by ameng on 2016/6/15.
- */
 public class HealthFragment extends BaseFragment {
     private View mRootView;
     private Context mContext;
     private Unbinder bind;
 
+    @BindView(R.id.list_view)
+    ListView mListView;
 
+    private HealthListAdapter mAdapter;
+    private ArrayList<FamilyInfoBean> mDataSource = new ArrayList<>();
 
 
     @Override
@@ -56,7 +67,26 @@ public class HealthFragment extends BaseFragment {
 
 
     private void initView(){
+        mDataSource.add(new FamilyInfoBean());
+        mDataSource.add(new FamilyInfoBean());
+        setMyAdapter();
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(mContext, FootActivity.class);
+                startActivity(intent);
+                //ToastUtil.showToast(mContext,"项目正在开发中，敬请期待...");
+            }
+        });
+    }
 
+    public void setMyAdapter() {
+        if (mAdapter == null) {
+            mAdapter = new HealthListAdapter(mContext, mDataSource);
+            mListView.setAdapter(mAdapter);
+        } else {
+            mAdapter.refreshData(mDataSource);
+        }
 
     }
 

@@ -76,7 +76,7 @@ public class AddMemberActivity extends BaseActivity{
         mSaveBtn.setOnClickListener(this);
         String[] mItems = {"普通成员","管理员"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (this,R.layout.item_spinner, mItems);
+                (this,android.R.layout.simple_spinner_item, mItems);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //getData();
         mRoleSpinner.setAdapter(adapter);

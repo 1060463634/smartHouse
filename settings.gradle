@@ -1,1 +1,1 @@
-include ':app', 'ptr-lib', ':FlycoTabLayout_Lib', ':library', ':yingshi'
+include ':app', 'ptr-lib', ':FlycoTabLayout_Lib', ':library', ':yingshi', ':BlueTooth'

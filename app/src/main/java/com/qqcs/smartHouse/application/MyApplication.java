@@ -3,6 +3,7 @@ package com.qqcs.smartHouse.application;
 import android.app.Application;
 
 import com.google.gson.Gson;
+import com.inuker.bluetooth.library.BluetoothContext;
 import com.qqcs.smartHouse.utils.ImageLoaderUtil;
 import com.videogo.openapi.EZOpenSDK;
 import com.videogo.openapi.EzvizAPI;
@@ -49,6 +50,8 @@ public class MyApplication extends Application {
 
         /** * APP_KEY请替换成自己申请的 */
         EZOpenSDK.initLib(this, "a2b622cdd9bf4c2c9b2b0904181c0a06");
+
+        BluetoothContext.set(this);
 
     }
 

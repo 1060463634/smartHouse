@@ -35,6 +35,10 @@ public class Constants {
     public static final String HTTP_UPDATE_MEMBER = HTTP_SERVER_DOMAIN + "/app/family/member/update";
     public static final String HTTP_LOGOUT = HTTP_SERVER_DOMAIN + "/app/auth/logout";
     public static final String HTTP_ACCEPT_MEMBER = HTTP_SERVER_DOMAIN + "/app/family/member/approvalJoinRequest";
+    public static final String HTTP_GATEWAY_INFO = HTTP_SERVER_DOMAIN + "/app/gateway/infoByFamily";
+    public static final String HTTP_GATEWAY_REGISTER = HTTP_SERVER_DOMAIN + "/app/gateway/register";
+    public static final String HTTP_GATEWAY_BOND = HTTP_SERVER_DOMAIN + "/app/gateway/bind";
+
 
 
     //首页
@@ -66,9 +70,6 @@ public class Constants {
 
     public static final int REQUEST_CODE_SCAN = 102;
     public static final int REQUEST_CREATE_FAMILY = 101;
-
-    public static final int REFRESH_TIME = 2000;
-
 
 
 

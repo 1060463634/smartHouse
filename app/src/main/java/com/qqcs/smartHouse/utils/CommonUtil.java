@@ -23,6 +23,8 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,11 +67,117 @@ public class CommonUtil {
 
 
 
+	public static String str2HexStr(String str)
+	{
+
+		char[] chars = "0123456789ABCDEF".toCharArray();
+		StringBuilder sb = new StringBuilder("");
+		byte[] bs = str.getBytes();
+		int bit;
+
+		for (int i = 0; i < bs.length; i++)
+		{
+			bit = (bs[i] & 0x0f0) >> 4;
+			sb.append(chars[bit]);
+			bit = bs[i] & 0x0f;
+			sb.append(chars[bit]);
+		}
+
+		for (int i = 0; i < 32 - str.length(); i++)
+		{
+			sb.append("00");
+		}
 
 
+		return sb.toString().trim();
+	}
 
 
+	public static String get00Str(int num)
+	{
 
+		StringBuilder sb = new StringBuilder("");
+
+
+		for (int i = 0; i < num; i++)
+		{
+			sb.append("00");
+		}
+
+		return sb.toString().trim();
+	}
+
+	public static String getRandomStr(int num)
+	{
+
+		StringBuilder sb = new StringBuilder("");
+
+		Random random = new Random();
+		for (int i = 0; i < num; i++)
+		{
+
+			int r = random.nextInt(9);
+			sb.append(r + "" + r);
+		}
+
+		return sb.toString().trim();
+	}
+
+	public static String getTimeHex()
+	{
+		Date date = new Date();
+		String dateStr = DateUtil.data2STString(date);
+		String dateHex1 = dateStr.replace("-","");
+		String dateHex2 = dateHex1.replace(":","").replace(" ","");
+		String dateHex3 = dateHex2.substring(dateHex2.length()- 12);
+
+		return dateHex3;
+	}
+
+	public static String getHexSum(String str)
+	{
+
+		int sum = 0;
+		for (int i = 0; i < str.length()/2; i++)
+		{
+			String sub = str.substring(i * 2,i * 2 + 2);
+			int subDe =  hex2decimal(sub);
+			sum = sum + subDe;
+		}
+
+		String result = demical2Hex(sum);
+		if(result.length() >= 4 ){
+			return str.substring(result.length()-4, result.length());
+		}else{
+			StringBuilder sb = new StringBuilder("");
+			for (int i = 0; i < 4 - result.length(); i++)
+			{
+				sb.append("0");
+			}
+
+			return sb.toString().trim() + result;
+		}
+	}
+
+	/**
+	 * 16进制转10进制
+	 *
+	 * @param hex
+	 * @return
+	 */
+	public static int hex2decimal(String hex) {
+		return Integer.parseInt(hex, 16);
+	}
+
+	/**
+	 * 10进制转16进制
+	 * @param i
+	 * @return
+	 */
+	public static String demical2Hex(int i) {
+		String s = Integer.toHexString(i);
+		return s;
+	}
 
 
 	public static String toDouble(String one){
@@ -79,6 +187,8 @@ public class CommonUtil {
 		}
 		return str;
 	}
+
+
 
 	/**
 	 * 判断是否安装APK的方法
@@ -167,6 +277,23 @@ public class CommonUtil {
 		String szImei = TelephonyMgr.getDeviceId();
 		return szImei;
 	}
+
+	public static String getUUID(Context context) {
+		final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+		final String tmDevice, tmSerial, tmPhone, androidId;
+		tmDevice = "" + tm.getDeviceId();
+		tmSerial = "" + tm.getSimSerialNumber();
+		androidId = "" + android.provider.Settings.
+				Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+		UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+		String uniqueId = deviceUuid.toString();
+		return uniqueId;
+	}
+
+
+
 
 
 

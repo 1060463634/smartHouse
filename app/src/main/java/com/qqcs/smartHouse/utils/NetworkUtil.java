@@ -3,6 +3,11 @@ package com.qqcs.smartHouse.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.util.Log;
+
+import static android.content.Context.WIFI_SERVICE;
 
 public class NetworkUtil {
 
@@ -12,6 +17,7 @@ public class NetworkUtil {
 
     /**
      * 检测当的网络（WLAN、3G/2G）状态
+     *
      * @param context Context
      * @return true 表示网络可用
      */
@@ -20,11 +26,9 @@ public class NetworkUtil {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getActiveNetworkInfo();
-            if (info != null && info.isConnected())
-            {
+            if (info != null && info.isConnected()) {
                 // 当前网络是连接的
-                if (info.getState() == NetworkInfo.State.CONNECTED)
-                {
+                if (info.getState() == NetworkInfo.State.CONNECTED) {
                     // 当前所连接的网络可用
                     return true;
                 }
@@ -54,4 +58,21 @@ public class NetworkUtil {
             }
         }
     }
+
+    public static String getConnectWifiSsid(Context context) {
+
+        WifiManager wm = (WifiManager) context.getSystemService(WIFI_SERVICE);
+        if (wm != null) {
+            WifiInfo winfo = wm.getConnectionInfo();
+            if (winfo != null) {
+                String s = winfo.getSSID();
+                if (s.length() > 2 && s.charAt(0) == '"' && s.charAt(s.length() - 1) == '"') {
+                    return s.substring(1, s.length() - 1);
+                }
+            }
+        }
+        return "";
+    }
+
 }
+

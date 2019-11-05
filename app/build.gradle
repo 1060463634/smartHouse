@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/Users/mac/Desktop/文档/交接/sign.keystore')
+            storePassword '123456'
+            keyAlias = 'wangminglei'
+            keyPassword '123456'
+        }
+    }
     compileSdkVersion 26  //我们编译app时候用的sdk版本,设置到最高
     buildToolsVersion '26.0.2' //你构建工具的版本号,设置到最高
     defaultConfig {
@@ -20,12 +28,17 @@ android {
                 JPUSH_APPKEY : "d7503bc19d92fdf7ccc26c1a", //JPush 上注册的包名对应的 Appkey.
                 JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
         ]
+        signingConfig signingConfigs.debug
 
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 }
@@ -60,4 +73,6 @@ dependencies {
     implementation project(path: ':yingshi')
     //二维码
     implementation 'com.github.yuzhiqiang1993:zxing:2.2.5'
+    implementation project(path: ':BlueTooth')
+
 }

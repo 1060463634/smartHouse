@@ -500,14 +500,6 @@ public class DeviceListAdapter extends BaseAdapter{
                     @Override
                     public void onSuccess(Object data) {
                         ToastUtil.showToast(mContext,"发送成功");
-                        final Timer t = new Timer();
-                        t.schedule(new TimerTask() {
-                            public void run() {
-                                EventBus.getDefault().post(new EventBusBean(EventBusBean.REFRESH_HOME));
-
-                                t.cancel();
-                            }
-                        }, Constants.REFRESH_TIME);
                     }
 
                     @Override
