@@ -28,8 +28,11 @@ public class BlueDeviceListAdapter extends BaseAdapter implements Comparator<Sea
 
     private List<SearchResult> mDataList;
 
-    public BlueDeviceListAdapter(Context context) {
+    private String mFamilyId;
+
+    public BlueDeviceListAdapter(Context context,String familyId) {
         mContext = context;
+        mFamilyId = familyId;
         mDataList = new ArrayList<SearchResult>();
     }
 
@@ -83,7 +86,7 @@ public class BlueDeviceListAdapter extends BaseAdapter implements Comparator<Sea
 
         final SearchResult result = (SearchResult) getItem(position);
 
-//        holder.name.setText(result.getName());
+        holder.name.setText(result.getName());
 //        holder.mac.setText(result.getAddress());
 //        holder.rssi.setText(String.format("Rssi: %d", result.rssi));
 //
@@ -114,6 +117,7 @@ public class BlueDeviceListAdapter extends BaseAdapter implements Comparator<Sea
                 dialog.dismiss();
                 Intent intent = new Intent();
                 intent.setClass(mContext, BlueToothDetailActivity.class);
+                intent.putExtra("familyId",mFamilyId);
                 intent.putExtra("mac", address);
                 mContext.startActivity(intent);
 

@@ -178,8 +178,10 @@ public class MineFragment extends BaseFragment{
                         //普通成员成员管理不显示
                         if(data.getUserRole().equalsIgnoreCase(Constants.ROLE_NORMAL) ){
                             mMemberLayout.setVisibility(View.GONE);
+                            mGatewayLayout.setVisibility(View.GONE);
                         }else {
                             mMemberLayout.setVisibility(View.VISIBLE);
+                            mGatewayLayout.setVisibility(View.VISIBLE);
                         }
 
                     }
@@ -209,7 +211,10 @@ public class MineFragment extends BaseFragment{
                 startActivity(intent);
                 break;
             case R.id.gateway_manage_layout:
+                String familyId = (String) SharePreferenceUtil.
+                        get(mContext, SP_Constants.CURRENT_FAMILY_ID,"");
                 intent = new Intent(mContext, GatewayManageActivity.class);
+                intent.putExtra("familyId",familyId);
                 startActivity(intent);
                 break;
             case R.id.version_manage_layout:

@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:text="网关名称：WG0003"
+            android:text=""
             android:textColor="@color/text_black"
             android:textSize="16dp" />
         <TextView
@@ -55,7 +55,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginLeft="20dp"
             android:layout_marginBottom="15dp"
-            android:text="固件版本号：01010000"
+            android:text=""
             android:textColor="@color/text_black"
             android:textSize="16dp" />
     </LinearLayout>

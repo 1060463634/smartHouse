@@ -135,6 +135,7 @@ public class HomeDetailActivity extends BaseActivity{
         mSaveTV.setOnClickListener(this);
         mQrcodeLayout.setOnClickListener(this);
         mHomeMemberLayout.setOnClickListener(this);
+        mBindGatewayLayout.setOnClickListener(this);
 
         //初始化用户操作权限
         if(userRole.equalsIgnoreCase(Constants.ROLE_MANAGE)){
@@ -424,6 +425,11 @@ public class HomeDetailActivity extends BaseActivity{
 
             case R.id.home_member_layout:
                 intent = new Intent(this,MemberManageActivity.class);
+                intent.putExtra("familyId",familyId);
+                startActivity(intent);
+                break;
+            case R.id.bind_gateway_layout:
+                intent = new Intent(this, GatewayManageActivity.class);
                 intent.putExtra("familyId",familyId);
                 startActivity(intent);
                 break;

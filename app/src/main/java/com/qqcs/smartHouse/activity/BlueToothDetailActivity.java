@@ -67,8 +67,7 @@ import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
 
-public class BlueToothDetailActivity extends BaseActivity{
-
+public class BlueToothDetailActivity extends BaseActivity {
 
 
     @BindView(R.id.wifi_name_edt)
@@ -86,6 +85,7 @@ public class BlueToothDetailActivity extends BaseActivity{
     private String mDeviceName = "";
     private String mProductKey = "";
     private String mDeviceSecret = "";
+    private String mFamilyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,13 +98,14 @@ public class BlueToothDetailActivity extends BaseActivity{
     }
 
 
-    private void initView(){
+    private void initView() {
         String wifiAccount = NetworkUtil.getConnectWifiSsid(this);
         mNameEdit.setText(wifiAccount);
         mOkBtn.setOnClickListener(this);
 
         Intent intent = getIntent();
         String mac = intent.getStringExtra("mac");
+        mFamilyId = getIntent().getStringExtra("familyId");
         mResult = intent.getParcelableExtra("device");
         mDevice = BluetoothUtils.getRemoteDevice(mac);
 
@@ -115,16 +116,15 @@ public class BlueToothDetailActivity extends BaseActivity{
     }
 
 
-
     private final BleConnectStatusListener mConnectStatusListener = new BleConnectStatusListener() {
         @Override
         public void onConnectStatusChanged(String mac, int status) {
             BluetoothLog.v(String.format("DeviceDetailActivity onConnectStatusChanged %d in %s",
                     status, Thread.currentThread().getName()));
-            if(status == STATUS_CONNECTED){
-                ToastUtil.showToast(BlueToothDetailActivity.this,"已连接");
-            }else {
-                ToastUtil.showToast(BlueToothDetailActivity.this,"连接已断开");
+            if (status == STATUS_CONNECTED) {
+                ToastUtil.showToast(BlueToothDetailActivity.this, "已连接");
+            } else {
+                ToastUtil.showToast(BlueToothDetailActivity.this, "连接已断开");
             }
 
             mConnected = (status == STATUS_CONNECTED);
@@ -169,15 +169,15 @@ public class BlueToothDetailActivity extends BaseActivity{
             }
         }
 
-        for(DetailItem item:items){
-            if(item.type == DetailItem.TYPE_CHARACTER){
-                if(item.uuid.toString().toUpperCase().contains("C4B2")){
+        for (DetailItem item : items) {
+            if (item.type == DetailItem.TYPE_CHARACTER) {
+                if (item.uuid.toString().toUpperCase().contains("C4B2")) {
                     ClientManager.getClient().notify(mDevice.getAddress(),
                             item.service, item.uuid, mNotifyRsp);
 
 
                 }
-                if(item.uuid.toString().toUpperCase().contains("ACE7")){
+                if (item.uuid.toString().toUpperCase().contains("ACE7")) {
                     mServiceId = item.service;
                     mUuid = item.uuid;
                     //getDeviceUuid();
@@ -188,8 +188,8 @@ public class BlueToothDetailActivity extends BaseActivity{
 
     }
 
-    private UUID mServiceId ;
-    private UUID mUuid ;
+    private UUID mServiceId;
+    private UUID mUuid;
 
 
     private void connectDeviceIfNeeded() {
@@ -210,7 +210,7 @@ public class BlueToothDetailActivity extends BaseActivity{
     protected void showLoadingDialog() {
         if (mDialog == null) {
             mDialog = WeiboDialogUtils.createLoadingDialog(this, "连接中...");
-        }else{
+        } else {
             mDialog.show();
         }
 
@@ -221,13 +221,13 @@ public class BlueToothDetailActivity extends BaseActivity{
 
     }
 
-    private void getDeviceUuid(){
+    private void getDeviceUuid() {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 String mid = CommonUtil.getUUID(BlueToothDetailActivity.this).toUpperCase();
-                String muuid = mid.replace("-","");
+                String muuid = mid.replace("-", "");
                 String randomHex = CommonUtil.getRandomStr(32);
                 String timeHex = CommonUtil.getTimeHex();
 
@@ -242,9 +242,8 @@ public class BlueToothDetailActivity extends BaseActivity{
                 String fix = prefix + postfix;
 
                 mNofifyInfo = new StringBuffer();
-                for (int i = 0; i < fix.length() / 20; i++)
-                {
-                    String sub = fix.substring(i * 20,i * 20 + 20);
+                for (int i = 0; i < fix.length() / 20; i++) {
+                    String sub = fix.substring(i * 20, i * 20 + 20);
                     ClientManager.getClient().write(mDevice.getAddress(), mServiceId, mUuid,
                             ByteUtils.stringToBytes(sub), mWriteRsp);
                     try {
@@ -261,7 +260,7 @@ public class BlueToothDetailActivity extends BaseActivity{
 
     }
 
-    private void sendWifiInfo(){
+    private void sendWifiInfo() {
 
         new Thread(new Runnable() {
             @Override
@@ -271,7 +270,7 @@ public class BlueToothDetailActivity extends BaseActivity{
                 String dataHex = accountHex + pswHex + CommonUtil.get00Str(36);
 
                 String mid = CommonUtil.getUUID(BlueToothDetailActivity.this).toUpperCase();
-                String muuid = mid.replace("-","");
+                String muuid = mid.replace("-", "");
 
                 String prefix = "EF01" + "0002" + "0082" + "0012" + "0100" + muuid + "0010"
                         + dataHex;
@@ -279,9 +278,8 @@ public class BlueToothDetailActivity extends BaseActivity{
 
                 String fix = prefix + postfix;
 
-                for (int i = 0; i < fix.length() / 20; i++)
-                {
-                    String sub = fix.substring(i * 20,i * 20 + 20);
+                for (int i = 0; i < fix.length() / 20; i++) {
+                    String sub = fix.substring(i * 20, i * 20 + 20);
                     ClientManager.getClient().write(mDevice.getAddress(), mServiceId, mUuid,
                             ByteUtils.stringToBytes(sub), mWriteRsp);
                     try {
@@ -305,7 +303,7 @@ public class BlueToothDetailActivity extends BaseActivity{
 
     }
 
-    private void sendThreeInfo(){
+    private void sendThreeInfo() {
 
         new Thread(new Runnable() {
             @Override
@@ -314,11 +312,11 @@ public class BlueToothDetailActivity extends BaseActivity{
                 String productKeyHex = CommonUtil.str2HexStr(mProductKey);
                 String deviceSecretHex = CommonUtil.str2HexStr(mDeviceSecret);
 
-                String dataHex = deviceNameHex + productKeyHex + deviceSecretHex
+                String dataHex = productKeyHex + deviceNameHex + deviceSecretHex
                         + CommonUtil.get00Str(4);
 
                 String mid = CommonUtil.getUUID(BlueToothDetailActivity.this).toUpperCase();
-                String muuid = mid.replace("-","");
+                String muuid = mid.replace("-", "");
 
                 String prefix = "EF01" + "0001" + "0082" + "0012" + "0100" + muuid + "0010"
                         + dataHex;
@@ -326,9 +324,8 @@ public class BlueToothDetailActivity extends BaseActivity{
 
                 String fix = prefix + postfix;
 
-                for (int i = 0; i < fix.length() / 20; i++)
-                {
-                    String sub = fix.substring(i * 20,i * 20 + 20);
+                for (int i = 0; i < fix.length() / 20; i++) {
+                    String sub = fix.substring(i * 20, i * 20 + 20);
                     ClientManager.getClient().write(mDevice.getAddress(), mServiceId, mUuid,
                             ByteUtils.stringToBytes(sub), mWriteRsp);
                     try {
@@ -336,7 +333,6 @@ public class BlueToothDetailActivity extends BaseActivity{
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
                 }
 
                 try {
@@ -352,13 +348,13 @@ public class BlueToothDetailActivity extends BaseActivity{
 
     }
 
-    private void rebootGateWay(){
+    private void rebootGateWay() {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 String mid = CommonUtil.getUUID(BlueToothDetailActivity.this).toUpperCase();
-                String muuid = mid.replace("-","");
+                String muuid = mid.replace("-", "");
                 String randomHex = CommonUtil.getRandomStr(32);
                 String timeHex = CommonUtil.getTimeHex();
 
@@ -373,9 +369,8 @@ public class BlueToothDetailActivity extends BaseActivity{
                 String fix = prefix + postfix;
 
                 mNofifyInfo = new StringBuffer();
-                for (int i = 0; i < fix.length() / 20; i++)
-                {
-                    String sub = fix.substring(i * 20,i * 20 + 20);
+                for (int i = 0; i < fix.length() / 20; i++) {
+                    String sub = fix.substring(i * 20, i * 20 + 20);
                     ClientManager.getClient().write(mDevice.getAddress(), mServiceId, mUuid,
                             ByteUtils.stringToBytes(sub), mWriteRsp);
                     try {
@@ -393,53 +388,38 @@ public class BlueToothDetailActivity extends BaseActivity{
                 mHandler.sendEmptyMessage(1);
 
 
-
             }
         }).start();
 
 
     }
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            ToastUtil.showToast(BlueToothDetailActivity.this,"成功");
-            BondGateway(mGateWayUid,mDeviceName);
+            dismissLoadingDialog();
+            ToastUtil.showToast(BlueToothDetailActivity.this, "成功");
+            BondGateway(mGateWayUid, mDeviceName);
         }
     };
 
 
     @Override
     public void onMultiClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
 
             case R.id.ok_btn:
 
-                if(TextUtils.isEmpty(mNameEdit.getText().toString())){
-                    ToastUtil.showToast(this,"请输入WiFi账号");
+                if (TextUtils.isEmpty(mNameEdit.getText().toString())) {
+                    ToastUtil.showToast(this, "请输入WiFi账号");
                     return;
                 }
-                if(TextUtils.isEmpty(mPswEdit.getText().toString())){
-                    ToastUtil.showToast(this,"请输入WiFi密码");
+                if (TextUtils.isEmpty(mPswEdit.getText().toString())) {
+                    ToastUtil.showToast(this, "请输入WiFi密码");
                     return;
                 }
+                showLoadingDialog();
                 getDeviceUuid();
-
-                /*String accountHex = CommonUtil.str2HexStr(mNameEdit.getText().toString());
-                String pswHex = CommonUtil.str2HexStr(mPswEdit.getText().toString());
-                String dataHex = accountHex + pswHex + CommonUtil.get00Str(36);
-
-                String mid = CommonUtil.getUUID(this).toUpperCase();
-                String muuid = mid.replace("-","");
-
-                String prefix = "EF01" + "0002" + "0082" + "0012" + "0100" + muuid + "0010"
-                        + dataHex;
-                String postfix = CommonUtil.getHexSum(prefix);
-
-                String fix = prefix + postfix;
-
-                ClientManager.getClient().write(mDevice.getAddress(), mServiceId, mUuid,
-                        ByteUtils.stringToBytes(fix), mWriteRsp);*/
 
                 break;
 
@@ -450,13 +430,12 @@ public class BlueToothDetailActivity extends BaseActivity{
         @Override
         public void onResponse(int code) {
             if (code == REQUEST_SUCCESS) {
-                ToastUtil.showToast(BlueToothDetailActivity.this,"写入成功");
+                //ToastUtil.showToast(BlueToothDetailActivity.this,"写入成功");
             } else {
-                ToastUtil.showToast(BlueToothDetailActivity.this,"写入失败");
+                //ToastUtil.showToast(BlueToothDetailActivity.this,"写入失败");
             }
         }
     };
-
 
 
     private StringBuffer mNofifyInfo = new StringBuffer();
@@ -467,10 +446,10 @@ public class BlueToothDetailActivity extends BaseActivity{
             LogUtil.d("onNotify:" + ByteUtils.byteToString(value));
 
             mNofifyInfo.append(ByteUtils.byteToString(value));
-            if(mNofifyInfo.length() >= 130){
-                mGateWayUid = mNofifyInfo.substring(20,52);
+            if (mNofifyInfo.length() >= 130) {
+                mGateWayUid = mNofifyInfo.substring(20, 52);
                 LogUtil.d(mGateWayUid);
-                registerGateway(mGateWayUid,GatewayManageActivity.mDeviceName);
+                registerGateway(mGateWayUid, GatewayManageActivity.mDeviceName);
 
             }
 
@@ -490,16 +469,15 @@ public class BlueToothDetailActivity extends BaseActivity{
 
 
     boolean hasRegisterGateway = false;
-    private void registerGateway(String uuid,String deviceName) {
-        if(hasRegisterGateway){
+
+    private void registerGateway(String uuid, String deviceName) {
+        if (hasRegisterGateway) {
             return;
         }
         hasRegisterGateway = true;
         String accessToken = (String) SharePreferenceUtil.
-                get(this, SP_Constants.ACCESS_TOKEN,"");
+                get(this, SP_Constants.ACCESS_TOKEN, "");
 
-        String familyId = (String) SharePreferenceUtil.
-                get(this, SP_Constants.CURRENT_FAMILY_ID,"");
 
         String timestamp = System.currentTimeMillis() + "";
         JSONObject object = CommonUtil.getRequstJson(this);
@@ -507,13 +485,13 @@ public class BlueToothDetailActivity extends BaseActivity{
 
         try {
             dataObject.put("uuid", uuid);
-            dataObject.put("familyId", familyId);
+            dataObject.put("familyId", mFamilyId);
             dataObject.put("deviceName", deviceName);
             dataObject.put("timestamp", timestamp);
 
             object.put("data", dataObject);
             object.put("sign", MD5Utils.md5s(uuid
-                    + familyId + deviceName + timestamp));
+                    + mFamilyId + deviceName + timestamp));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -523,12 +501,12 @@ public class BlueToothDetailActivity extends BaseActivity{
                 .postString()
                 .tag(this)
                 .url(Constants.HTTP_GATEWAY_REGISTER)
-                .addHeader("access-token",accessToken)
+                .addHeader("access-token", accessToken)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .content(object.toString())
                 .build()
                 .execute(new MyStringCallback<TrunpleInfoBean>(this,
-                        GatewayInfoBean.class, true, false) {
+                        TrunpleInfoBean.class, false, false) {
                     @Override
                     public void onSuccess(TrunpleInfoBean data) {
                         mDeviceName = data.getDeviceName();
@@ -539,17 +517,16 @@ public class BlueToothDetailActivity extends BaseActivity{
 
                     @Override
                     public void onFailure(String message) {
+                        dismissLoadingDialog();
                         ToastUtil.showToast(BlueToothDetailActivity.this, message);
                     }
                 });
     }
 
-    private void BondGateway(String uuid,String deviceName) {
+    private void BondGateway(String uuid, String deviceName) {
         String accessToken = (String) SharePreferenceUtil.
-                get(this, SP_Constants.ACCESS_TOKEN,"");
+                get(this, SP_Constants.ACCESS_TOKEN, "");
 
-        String familyId = (String) SharePreferenceUtil.
-                get(this, SP_Constants.CURRENT_FAMILY_ID,"");
 
         String timestamp = System.currentTimeMillis() + "";
         JSONObject object = CommonUtil.getRequstJson(this);
@@ -557,13 +534,13 @@ public class BlueToothDetailActivity extends BaseActivity{
 
         try {
             dataObject.put("uuid", uuid);
-            dataObject.put("familyId", familyId);
+            dataObject.put("familyId", mFamilyId);
             dataObject.put("deviceName", deviceName);
             dataObject.put("timestamp", timestamp);
 
             object.put("data", dataObject);
             object.put("sign", MD5Utils.md5s(uuid
-                    + familyId + deviceName + timestamp));
+                    + mFamilyId + deviceName + timestamp));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -573,14 +550,17 @@ public class BlueToothDetailActivity extends BaseActivity{
                 .postString()
                 .tag(this)
                 .url(Constants.HTTP_GATEWAY_BOND)
-                .addHeader("access-token",accessToken)
+                .addHeader("access-token", accessToken)
                 .mediaType(MediaType.parse("application/json; charset=utf-8"))
                 .content(object.toString())
                 .build()
                 .execute(new MyStringCallback<TrunpleInfoBean>(this,
-                        GatewayInfoBean.class, true, false) {
+                        TrunpleInfoBean.class, false, false) {
                     @Override
                     public void onSuccess(TrunpleInfoBean data) {
+                        Intent intent = new Intent(BlueToothDetailActivity.this,
+                                GatewayManageActivity.class);
+                        startActivity(intent);
                         finish();
                     }
 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg_white"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title_bar" />
+
+    <include layout="@layout/layout_line_gray" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="150dp"
+        android:src="@drawable/ic_disconnect_gateway"
+        android:scaleType="fitXY"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="当前家庭还未绑定智能网关"
+        android:textColor="@color/text_black"
+        android:textStyle="bold"
+        android:textSize="18dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="请先打开手机蓝牙，然后点击【下一步】按钮"
+        android:textColor="@color/text_black_gray"
+        android:textSize="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_margin="15dp"
+        android:text="进入家庭网关10米内，当搜索到网关后点击连接。连接后请一直保持10米内的有效距离。"
+        android:gravity="center"
+        android:textColor="@color/text_black_gray"
+        android:textSize="16dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+
+    <Button
+        android:id="@+id/next_btn"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginBottom="45dp"
+        android:layout_marginRight="35dp"
+        android:background="@drawable/shape_login_btn"
+        android:text="下一步"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="18dp" />
+
+
+</LinearLayout>

@@ -19,9 +19,6 @@ import com.qqcs.smartHouse.utils.CommonUtil;
 import com.qqcs.smartHouse.utils.ToastUtil;
 
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +27,6 @@ import butterknife.ButterKnife;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.header.MaterialHeader;
-import okhttp3.MediaType;
 
 
 public class GatewayConnectActivity extends BaseActivity{
@@ -46,6 +42,8 @@ public class GatewayConnectActivity extends BaseActivity{
     private List<SearchResult> mDevices = new ArrayList<SearchResult>();
 
     private BlueDeviceListAdapter mAdapter;
+
+    private String mFamilyId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +51,12 @@ public class GatewayConnectActivity extends BaseActivity{
         ButterKnife.bind(this);
         setTitleName("建立蓝牙连接");
         initView();
-
     }
 
 
     private void initView(){
-        mAdapter = new BlueDeviceListAdapter(this);
+        mFamilyId = getIntent().getStringExtra("familyId");
+        mAdapter = new BlueDeviceListAdapter(this,mFamilyId);
         mListView.setAdapter(mAdapter);
 
         // 下拉刷新
@@ -121,7 +119,7 @@ public class GatewayConnectActivity extends BaseActivity{
 
     private void searchDevice() {
         SearchRequest request = new SearchRequest.Builder()
-                .searchBluetoothLeDevice(3000, 1).build();
+                .searchBluetoothLeDevice(2000, 1).build();
 
         ClientManager.getClient().search(request, mSearchResponse);
     }
@@ -135,7 +133,9 @@ public class GatewayConnectActivity extends BaseActivity{
         @Override
         public void onDeviceFounded(SearchResult device) {
 //            BluetoothLog.w("MainActivity.onDeviceFounded " + device.device.getAddress());
-            if (!mDevices.contains(device)) {
+            if (!mDevices.contains(device) &&
+                    device.getName().equalsIgnoreCase("YXJWG")) {
+
                 mDevices.add(device);
                 mAdapter.setDataList(mDevices);
 

@@ -8,13 +8,17 @@ import android.widget.TextView;
 
 import com.qqcs.smartHouse.R;
 import com.qqcs.smartHouse.application.Constants;
+import com.qqcs.smartHouse.application.OnMultiClickListener;
 import com.qqcs.smartHouse.application.SP_Constants;
 import com.qqcs.smartHouse.models.CurUserInfoBean;
 import com.qqcs.smartHouse.models.GatewayInfoBean;
+import com.qqcs.smartHouse.network.CommonJson;
+import com.qqcs.smartHouse.network.GsonUtils;
 import com.qqcs.smartHouse.network.MyStringCallback;
 import com.qqcs.smartHouse.utils.CommonUtil;
 import com.qqcs.smartHouse.utils.DateUtil;
 import com.qqcs.smartHouse.utils.ImageLoaderUtil;
+import com.qqcs.smartHouse.utils.LogUtil;
 import com.qqcs.smartHouse.utils.MD5Utils;
 import com.qqcs.smartHouse.utils.SharePreferenceUtil;
 import com.qqcs.smartHouse.utils.ToastUtil;
@@ -43,7 +47,7 @@ public class GatewayManageActivity extends BaseActivity{
     @BindView(R.id.gateway_version_tv)
     TextView mGatewayVersion;
 
-
+    private String mFamilyId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +60,19 @@ public class GatewayManageActivity extends BaseActivity{
 
 
     private void initView(){
+        mFamilyId = getIntent().getStringExtra("familyId");
         mGatewayImg.setOnClickListener(this);
         getGatewayInfo();
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setContentView(R.layout.activity_gateway_manage);
+        ButterKnife.bind(this);
+        setTitleName("网关信息");
+        initView();
 
     }
 
@@ -66,19 +81,16 @@ public class GatewayManageActivity extends BaseActivity{
         String accessToken = (String) SharePreferenceUtil.
                 get(this, SP_Constants.ACCESS_TOKEN,"");
 
-        String familyId = (String) SharePreferenceUtil.
-                get(this, SP_Constants.CURRENT_FAMILY_ID,"");
-
         String timestamp = System.currentTimeMillis() + "";
         JSONObject object = CommonUtil.getRequstJson(this);
         JSONObject dataObject = new JSONObject();
 
         try {
-            dataObject.put("familyId", familyId);
+            dataObject.put("familyId", mFamilyId);
             dataObject.put("timestamp", timestamp);
 
             object.put("data", dataObject);
-            object.put("sign", MD5Utils.md5s(familyId + timestamp));
+            object.put("sign", MD5Utils.md5s(mFamilyId + timestamp));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -94,6 +106,35 @@ public class GatewayManageActivity extends BaseActivity{
                 .build()
                 .execute(new MyStringCallback<GatewayInfoBean>(this,
                         GatewayInfoBean.class, false, false) {
+
+                    @Override
+                    public void onResponse(String s, int i) {
+                        LogUtil.d("http onSuccess  :" + s);
+
+                        try {
+                                CommonJson<GatewayInfoBean> commonJson = GsonUtils.fromJson(s, GatewayInfoBean.class);
+                                if (commonJson.getStatus().equalsIgnoreCase("Success")) {
+                                    onSuccess(commonJson.getData());
+                                } else {
+                                    onFailure(commonJson.getMessage());
+                                    onFailure(commonJson.getData());
+                                }
+
+
+                        } catch (Exception e1) {
+                            setContentView(R.layout.activity_gateway_manage_no);
+                            findViewById(R.id.next_btn).setOnClickListener(new OnMultiClickListener() {
+                                @Override
+                                public void onMultiClick(View v) {
+                                    Intent intent = new Intent(GatewayManageActivity.this,GatewayConnectActivity.class);
+                                    intent.putExtra("familyId",mFamilyId);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+
+                    }
+
                     @Override
                     public void onSuccess(GatewayInfoBean data) {
                         mGatewayName.setText("网关名称：" + data.getDeviceName());
@@ -118,6 +159,7 @@ public class GatewayManageActivity extends BaseActivity{
         switch (v.getId()){
             case R.id.gateway_img:
                 Intent intent = new Intent(this,GatewayConnectActivity.class);
+                intent.putExtra("familyId",mFamilyId);
                 startActivity(intent);
                 break;
 
