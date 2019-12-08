@@ -204,6 +204,10 @@
             android:name="com.qqcs.smartHouse.activity.BlueToothDetailActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.qqcs.smartHouse.activity.HealthCenterActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

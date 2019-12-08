@@ -25,6 +25,7 @@
     <include layout="@layout/layout_line_gray"/>
 
     <TextView
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="19dp"
@@ -41,7 +42,6 @@
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:background="@color/white"
         android:divider="@null"
         android:listSelector="@android:color/transparent" />

@@ -45,7 +45,8 @@ public class FootActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foot);
         ButterKnife.bind(this);
-        setTitleName("老王的鞋垫");
+        String name = getIntent().getStringExtra("name");
+        setTitleName(name + "的鞋垫");
         initView();
 
     }

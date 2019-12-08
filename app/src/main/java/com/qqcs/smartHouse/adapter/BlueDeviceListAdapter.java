@@ -86,7 +86,7 @@ public class BlueDeviceListAdapter extends BaseAdapter implements Comparator<Sea
 
         final SearchResult result = (SearchResult) getItem(position);
 
-        holder.name.setText(result.getName());
+        holder.name.setText(result.getAddress());
 //        holder.mac.setText(result.getAddress());
 //        holder.rssi.setText(String.format("Rssi: %d", result.rssi));
 //
